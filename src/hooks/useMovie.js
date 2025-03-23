@@ -110,12 +110,13 @@ export const useLatestMovies = () => {
       setError(null);
       try {
         const data = await fetchLatestMovies();
+        console.log(data)
         if (data.Response === "True" && data.Search) {
           setMovies(data.Search);
           sessionStorage.setItem(cacheKey, JSON.stringify(data.Search));
         } else {
           setError(data.Error || "No latest movies found.");
-          setMovies([]); // Reset movies list if API call fails
+          setMovies([]); 
         }
       } catch {
         setError("Failed to fetch latest movies.");

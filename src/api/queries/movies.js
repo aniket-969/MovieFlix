@@ -18,12 +18,14 @@ export const fetchMovies = async (searchTerm, page = 1) => {
       params: { s: query, page },
     });
     return response.data;
-  };
+  }
   
-  export const fetchLatestMovies = async () => {
+  export const fetchLatestMovies = async (query = "2025", page = 1) => {
     const response = await axiosClient.get("", {
-      params: { s: "*", y: 2024, type: "movie" }, 
+      params: { s: query, y: 2025, type: "movie", page }, 
     });
     return response.data;
   };
+  
+  
   
