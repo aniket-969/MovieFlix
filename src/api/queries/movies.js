@@ -16,3 +16,8 @@ export const fetchMoviesBySearch = async (searchTerm, page = 1) => {
     return axiosClient.get(`&s=${genre}`);
   };
   
+  export const fetchLatestMovies = async () => {
+    const response = await axiosClient.get(`?apikey=${API_KEY}&s=*&y=2024&type=movie`);
+    return response.data;
+  };
+  

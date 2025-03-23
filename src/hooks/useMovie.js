@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { fetchMovies, fetchMovieDetails } from "../api/movies";
 
 export const useMovies = (searchTerm = "Avengers", page = 1) => {
+    
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,7 +21,7 @@ export const useMovies = (searchTerm = "Avengers", page = 1) => {
       .then((data) => {
         if (data.Response === "True") {
           setMovies(data.Search);
-          sessionStorage.setItem(cacheKey, JSON.stringify(data.Search)); 
+          sessionStorage.setItem(cacheKey, JSON.stringify(data.Search));
         } else {
           setError(data.Error);
         }
@@ -30,4 +31,33 @@ export const useMovies = (searchTerm = "Avengers", page = 1) => {
   }, [searchTerm, page]);
 
   return { movies, loading, error };
+};
+
+export const useMovieDetails = (movieId) => {
+  const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!movieId) return;
+
+    const getMovieDetails = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchMovieDetails(movieId);
+        if (data.Response === "True") {
+          setMovie(data);
+        } else {
+          setError(data.Error);
+        }
+      } catch (err) {
+        setError("Failed to fetch movie details.");
+      }
+      setLoading(false);
+    };
+
+    getMovieDetails();
+  }, [movieId]);
+
+  return { movie, loading, error };
 };
