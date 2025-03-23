@@ -1,12 +1,19 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
+import Home from './pages/Home/Home';
 
 function App() {
  
   return (
     <>
-    Movie Flix
+    <Routes>
+      <Route index element = {<Home/>}/>
+      <Route path={"/movie/:id"} />
+      <Route path={"/favourites"} />
+      <Route path={"/search"} />
+      
+    </Routes>
     </>
   )
 }
