@@ -1,13 +1,14 @@
 import  { Suspense } from "react";
-import ErrorBoundary from "../../components/ErrorBoundary";
-import Spinner from "../../components/UI/spinner"; 
+import ErrorBoundary from "../../components/ErrorBoundary"; 
 
-export const AppProvider = ({ children }) => {
+const AppProvider = ({ children }) => {
   return (
     <Suspense
       fallback={
         <div className="d-flex justify-content-center align-items-center vh-100">
-          <Spinner />
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
       }
     >
@@ -15,3 +16,4 @@ export const AppProvider = ({ children }) => {
     </Suspense>
   );
 };
+export default AppProvider

@@ -2,7 +2,7 @@ import {useMemo} from "react"
 import Home from './../Home/index';import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements } from "react-router-dom";
 
 
-export const AppRouter = ()=>{
+const AppRouter = ()=>{
     const router = useMemo(
         () =>
           createBrowserRouter(
@@ -15,3 +15,4 @@ export const AppRouter = ()=>{
         )
         return <RouterProvider router={router}/>
 }
+export default AppRouter
