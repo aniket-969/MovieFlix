@@ -2,46 +2,49 @@ import { useState, useEffect } from "react";
 import {
   fetchMovies,
   fetchMovieDetails,
-  fetchLatestMovies,
-} from "../api/movies";
-
-export const useMovies = (searchTerm = "Avengers", page = 1) => {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const cacheKey = `movies-${searchTerm}-${page}`;
-    const cachedData = sessionStorage.getItem(cacheKey);
-
-    if (cachedData) {
-      setMovies(JSON.parse(cachedData));
-      return;
-    }
-
-    const fetchData = async () => {
+  fetchLatestMovies} from "../api/queries/movies.js"
+  
+  export const useMovies = (searchTerm = "Avengers", page = 1) => {
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+  
+    useEffect(() => {
+      const cacheKey = `movies-${searchTerm}-${page}`;
+      const cachedData = sessionStorage.getItem(cacheKey);
+  
+      if (cachedData) {
+        setMovies(JSON.parse(cachedData));
+        return;
+      }
+  
+      const fetchData = async () => {
         setLoading(true);
-        setError(null);  
+        setError(null);
+  
         try {
-          const data = await fetchMovies(searchTerm, page);
-          if (data.Response === "True") {
-            setMovies(data.Search);
-            sessionStorage.setItem(cacheKey, JSON.stringify(data.Search));
+          const response = await fetchMovies(searchTerm, page);
+          console.log(response);  // Debugging output
+  
+          if (response.data.Response === "True") {
+            setMovies(response.data.Search);
+            sessionStorage.setItem(cacheKey, JSON.stringify(response.data.Search));
           } else {
-            setMovies([]);
-            setError(data.Error);
+            setMovies([]); // Reset movies when no results
+            setError(response.data.Error);
           }
-        } catch {
+        } catch (err) {
           setError("Failed to fetch movies.");
         }
+  
         setLoading(false);
       };
-      
-    fetchData();
-  }, [searchTerm, page]);
-
-  return { movies, loading, error };
-};
+  
+      fetchData();
+    }, [searchTerm, page]);
+  
+    return { movies, loading, error };
+  };  
 
 export const useMovieDetails = (movieId) => {
   const [movie, setMovie] = useState(null);
