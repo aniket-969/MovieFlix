@@ -133,8 +133,8 @@ export const useLatestMovies = () => {
 };
 
 export const useMovieFilter = () => {
-  const GENRES = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi"];
-  const [genre, setGenre] = useState("Action");
+  const GENRES = ["Action", "Comedy", "Drama", "Horror", "Science Fiction"];
+  const [genre, setGenre] = useState("Science Fiction");
   const [searchTerm, setSearchTerm] = useState(genre);
   const [page, setPage] = useState(1);
 

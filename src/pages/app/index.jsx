@@ -1,18 +1,18 @@
-
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../App.css'
-import  AppProvider  from './provider';
-import  AppRouter  from './router';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../../App.css";
+import AppProvider from "./provider";
+import AppRouter from "./router";
+import { ThemeProvider } from "../../context/ThemeContext";
 
 function App() {
- 
   return (
     <>
-   <AppProvider>
-    <AppRouter/>
-   </AppProvider>
+    
+        <AppProvider>
+          <AppRouter />
+        </AppProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
