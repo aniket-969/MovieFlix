@@ -2,49 +2,53 @@ import { useState, useEffect } from "react";
 import {
   fetchMovies,
   fetchMovieDetails,
-  fetchLatestMovies} from "../api/queries/movies.js"
-  
-  export const useMovies = (searchTerm = "Avengers", page = 1) => {
-    const [movies, setMovies] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-  
-    useEffect(() => {
-      const cacheKey = `movies-${searchTerm}-${page}`;
-      const cachedData = sessionStorage.getItem(cacheKey);
-  
-      if (cachedData) {
-        setMovies(JSON.parse(cachedData));
-        return;
-      }
-  
-      const fetchData = async () => {
-        setLoading(true);
-        setError(null);
-  
-        try {
-          const response = await fetchMovies(searchTerm, page);
-          console.log(response);  // Debugging output
-  
-          if (response.data.Response === "True") {
-            setMovies(response.data.Search);
-            sessionStorage.setItem(cacheKey, JSON.stringify(response.data.Search));
-          } else {
-            setMovies([]); // Reset movies when no results
-            setError(response.data.Error);
-          }
-        } catch (err) {
-          setError("Failed to fetch movies.");
+  fetchLatestMovies,
+} from "../api/queries/movies.js";
+
+export const useMovies = (searchTerm = "Avengers", page = 1) => {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const cacheKey = `movies-${searchTerm}-${page}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+
+    if (cachedData) {
+      setMovies(JSON.parse(cachedData));
+      return;
+    }
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetchMovies(searchTerm, page);
+        console.log(response); // Debugging output
+
+        if (response.data.Response === "True") {
+          setMovies(response.data.Search);
+          sessionStorage.setItem(
+            cacheKey,
+            JSON.stringify(response.data.Search)
+          );
+        } else {
+          setMovies([]); // Reset movies when no results
+          setError(response.data.Error);
         }
-  
-        setLoading(false);
-      };
-  
-      fetchData();
-    }, [searchTerm, page]);
-  
-    return { movies, loading, error };
-  };  
+      } catch (err) {
+        setError("Failed to fetch movies.");
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [searchTerm, page]);
+
+  return { movies, loading, error };
+};
 
 export const useMovieDetails = (movieId) => {
   const [movie, setMovie] = useState(null);
@@ -64,18 +68,20 @@ export const useMovieDetails = (movieId) => {
 
     const getMovieDetails = async () => {
       setLoading(true);
+      setError(null);
       try {
         const data = await fetchMovieDetails(movieId);
         if (data.Response === "True") {
           setMovie(data);
           sessionStorage.setItem(cacheKey, JSON.stringify(data));
         } else {
-          setError(data.Error);
+          setError(data.Error || "Failed to fetch movie details.");
         }
-      } catch {
+      } catch (error) {
         setError("Failed to fetch movie details.");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getMovieDetails();
@@ -101,18 +107,22 @@ export const useLatestMovies = () => {
 
     const fetchLatest = async () => {
       setLoading(true);
+      setError(null);
       try {
         const data = await fetchLatestMovies();
         if (data.Response === "True" && data.Search) {
           setMovies(data.Search);
           sessionStorage.setItem(cacheKey, JSON.stringify(data.Search));
         } else {
-          setError(data.Error || "Failed to fetch latest movies.");
+          setError(data.Error || "No latest movies found.");
+          setMovies([]); // Reset movies list if API call fails
         }
       } catch {
         setError("Failed to fetch latest movies.");
+        setMovies([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchLatest();
@@ -122,24 +132,18 @@ export const useLatestMovies = () => {
 };
 
 export const useMovieFilter = () => {
-    const GENRES = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi"];
-    const [genre, setGenre] = useState("Action");
-    const [searchTerm, setSearchTerm] = useState(genre);
-    const [page, setPage] = useState(1);
-  
-    const { movies, loading, error } = useMovies(searchTerm, page);
-  
-    const filteredMovies = movies.filter((movie) =>
-        movie.Genre?.toLowerCase().includes(genre.toLowerCase())
-      );
-      
-  
-    const updateGenre = (newGenre) => {
-      setGenre(newGenre);
-      setSearchTerm(newGenre); 
-      setPage(1);
-    };
-  
-    return { genre, updateGenre, movies: filteredMovies, loading, error, GENRES, page, setPage };
+  const GENRES = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi"];
+  const [genre, setGenre] = useState("Action");
+  const [searchTerm, setSearchTerm] = useState(genre);
+  const [page, setPage] = useState(1);
+
+  const { movies, loading, error } = useMovies(searchTerm, page);
+
+  const updateGenre = (newGenre) => {
+    setGenre(newGenre);
+    setSearchTerm(newGenre);
+    setPage(1);
   };
-  
+
+  return { genre, updateGenre, movies, loading, error, GENRES, page, setPage };
+};
