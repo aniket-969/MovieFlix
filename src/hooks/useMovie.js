@@ -20,21 +20,23 @@ export const useMovies = (searchTerm = "Avengers", page = 1) => {
     }
 
     const fetchData = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchMovies(searchTerm, page);
-        if (data.Response === "True") {
-          setMovies(data.Search);
-          sessionStorage.setItem(cacheKey, JSON.stringify(data.Search));
-        } else {
-          setError(data.Error);
+        setLoading(true);
+        setError(null);  
+        try {
+          const data = await fetchMovies(searchTerm, page);
+          if (data.Response === "True") {
+            setMovies(data.Search);
+            sessionStorage.setItem(cacheKey, JSON.stringify(data.Search));
+          } else {
+            setMovies([]);
+            setError(data.Error);
+          }
+        } catch {
+          setError("Failed to fetch movies.");
         }
-      } catch {
-        setError("Failed to fetch movies.");
-      }
-      setLoading(false);
-    };
-
+        setLoading(false);
+      };
+      
     fetchData();
   }, [searchTerm, page]);
 
@@ -98,9 +100,11 @@ export const useLatestMovies = () => {
       setLoading(true);
       try {
         const data = await fetchLatestMovies();
-        if (data.Search) {
+        if (data.Response === "True" && data.Search) {
           setMovies(data.Search);
           sessionStorage.setItem(cacheKey, JSON.stringify(data.Search));
+        } else {
+          setError(data.Error || "Failed to fetch latest movies.");
         }
       } catch {
         setError("Failed to fetch latest movies.");
@@ -113,3 +117,26 @@ export const useLatestMovies = () => {
 
   return { movies, loading, error };
 };
+
+export const useMovieFilter = () => {
+    const GENRES = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi"];
+    const [genre, setGenre] = useState("Action");
+    const [searchTerm, setSearchTerm] = useState(genre);
+    const [page, setPage] = useState(1);
+  
+    const { movies, loading, error } = useMovies(searchTerm, page);
+  
+    const filteredMovies = movies.filter((movie) =>
+        movie.Genre?.toLowerCase().includes(genre.toLowerCase())
+      );
+      
+  
+    const updateGenre = (newGenre) => {
+      setGenre(newGenre);
+      setSearchTerm(newGenre); 
+      setPage(1);
+    };
+  
+    return { genre, updateGenre, movies: filteredMovies, loading, error, GENRES, page, setPage };
+  };
+  
