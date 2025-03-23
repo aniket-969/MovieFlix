@@ -1,0 +1,27 @@
+.theme-toggle-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle-btn svg {
+  transition: transform 0.3s ease-in-out;
+}
+
+[data-theme="dark"] .theme-toggle-btn svg {
+  transform: rotate(180deg);
+}
