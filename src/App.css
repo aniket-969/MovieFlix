@@ -25,3 +25,169 @@
 [data-theme="dark"] .theme-toggle-btn svg {
   transform: rotate(180deg);
 }
+/* General Styles */
+body {
+  background-color: #141414;
+  color: #fff;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Hide scrollbars but allow scrolling */
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Card hover effects */
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+/* Blur effect for background when overlay is active */
+.blur-sm {
+  filter: blur(4px);
+  transition: filter 0.3s ease;
+  pointer-events: none;
+}
+
+/* Hero banner styles */
+.hero-banner {
+  transition: opacity 0.3s ease;
+}
+
+.carousel-item.active .hero-banner {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+/* Custom button styles */
+.btn-danger {
+  background-color: #e50914;
+  border-color: #e50914;
+}
+
+.btn-danger:hover, .btn-danger:focus {
+  background-color: #b81d24;
+  border-color: #b81d24;
+}
+
+/* Fixed height for movie cards in results */
+.results-card {
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.results-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Custom styles for genre pills */
+.genre-pill {
+  white-space: nowrap;
+  padding: 0.35rem 0.75rem;
+  margin-right: 0.5rem;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.genre-pill:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.genre-pill.active {
+  background-color: #e50914;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-banner {
+    height: 60vh !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-banner {
+    height: 50vh !important;
+  }
+}
+
+  .movie-carousel-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 1rem 0;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  .movie-carousel-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  
+  .movie-card-container {
+    flex: 0 0 auto;
+    width: calc(100% / 5); /* 5 visible at once */
+    padding: 0 0.25rem;
+  }
+  
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .carousel-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .left-arrow {
+    left: -10px;
+  }
+  
+  .right-arrow {
+    right: -10px;
+  }
+  
+  @media (max-width: 1199px) {
+    .movie-card-container {
+      width: calc(100% / 4); /* 4 visible on medium screens */
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .movie-card-container {
+      width: calc(100% / 3); /* 3 visible on small screens */
+    }
+  }
+  
+  @media (max-width: 575px) {
+    .movie-card-container {
+      width: calc(100% / 2); /* 2 visible on extra small screens */
+    }
+  }

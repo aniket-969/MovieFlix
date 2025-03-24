@@ -6,7 +6,7 @@ import {
   fetchMovieGenres,
   fetchMoviesByGenre,
   searchMovies,
-} from "../api/movies";
+} from "../api/queries/movies.js";
 
 export const useMovies = (
   type = "popular",
@@ -118,9 +118,8 @@ export const useMovies = (
   return { movies, loading, error, genres, page, totalPages, loadMore };
 };
 
-export default useMovies;
 
-import { fetchMovieDetails } from "../api/movies";
+import { fetchMovieDetails } from "../api/queries/movies";
 
 export const useMovieDetails = (movieId) => {
   const [movie, setMovie] = useState(null);

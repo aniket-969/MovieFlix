@@ -1,5 +1,6 @@
 import {useMemo} from "react"
 import Home from './../Home/index';import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements } from "react-router-dom";
+import MovieDetails from "../MovieDetails";
 
 
 const AppRouter = ()=>{
@@ -9,6 +10,7 @@ const AppRouter = ()=>{
             createRoutesFromElements(
               <>
                <Route path ="/" element={<Home/>}/>
+               <Route path ="/movie/:id" element={<MovieDetails/>}/>
               </>
             )
           ),[]
