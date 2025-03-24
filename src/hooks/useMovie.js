@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
-import { 
-  fetchLatestMovies, 
-  fetchPopularMovies, 
-  fetchTrendingMovies, 
-  fetchMovieGenres, 
-  fetchMoviesByGenre, 
-  searchMovies 
-} from "../api/movieApi";
+import {
+  fetchLatestMovies,
+  fetchPopularMovies,
+  fetchTrendingMovies,
+  fetchMovieGenres,
+  fetchMoviesByGenre,
+  searchMovies,
+} from "../api/movies";
 
-const useMovies = (type = "popular", genreId = null, searchTerm = "") => {
+export const useMovies = (
+  type = "popular",
+  genreId = null,
+  searchTerm = ""
+) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -16,11 +20,13 @@ const useMovies = (type = "popular", genreId = null, searchTerm = "") => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const storageKey = `movies-${type}-${genreId || "all"}-${searchTerm || "all"}-page-${page}`;
+  const storageKey = `movies-${type}-${genreId || "all"}-${
+    searchTerm || "all"
+  }-page-${page}`;
 
   useEffect(() => {
     const fetchMovies = async () => {
-      if (page > totalPages) return; 
+      if (page > totalPages) return;
 
       // If new search/genre, reset state
       if (page === 1) setMovies([]);
@@ -59,7 +65,11 @@ const useMovies = (type = "popular", genreId = null, searchTerm = "") => {
           }
         }
 
-        setMovies((prevMovies) => (page === 1 ? response.data.results : [...prevMovies, ...response.data.results]));
+        setMovies((prevMovies) =>
+          page === 1
+            ? response.data.results
+            : [...prevMovies, ...response.data.results]
+        );
         setTotalPages(response.data.total_pages);
 
         // Store in session storage
@@ -109,3 +119,33 @@ const useMovies = (type = "popular", genreId = null, searchTerm = "") => {
 };
 
 export default useMovies;
+
+import { fetchMovieDetails } from "../api/movies";
+
+export const useMovieDetails = (movieId) => {
+  const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!movieId) return;
+
+    const fetchDetails = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetchMovieDetails(movieId);
+        setMovie(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetails();
+  }, [movieId]);
+
+  return { movie, loading, error };
+};
