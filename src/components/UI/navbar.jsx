@@ -23,12 +23,6 @@ const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
     };
   }, []);
 
-  // Focus on search input when search is shown
-  useEffect(() => {
-    if (showSearch && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [showSearch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,9 +43,8 @@ const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
 
   // Group genres into categories for dropdown
   const genreCategories = {
-    "Popular Genres": genres.slice(0, 5),
-    "Movie Genres": genres.slice(5, 15),
-    "Other Genres": genres.slice(15),
+    "Popular Genres": genres.slice(0, 4),
+    "Movie Genres": genres.slice(5, 8)
   };
 
   return (
