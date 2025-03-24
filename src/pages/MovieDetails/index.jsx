@@ -59,7 +59,7 @@ const MovieDetails = () => {
     <Container fluid className="movie-details-container py-4">
       <Row className="justify-content-center">
         <Col xl={10} lg={11} md={12}>
-          <Card className="movie-card shadow">
+          <Card className=" shadow">
             <Row className="g-0">
               {/* Desktop view - Side by side layout */}
               <Col lg={4} md={5} className="d-none d-md-block poster-container">

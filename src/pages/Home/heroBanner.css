@@ -71,3 +71,8 @@
       font-size: 0.9rem;
     }
   }
+
+  /* Hero banner styles */
+.hero-banner {
+    transition: opacity 0.3s ease;
+  }

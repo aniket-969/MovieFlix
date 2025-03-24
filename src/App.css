@@ -61,11 +61,6 @@ body {
   pointer-events: none;
 }
 
-/* Hero banner styles */
-.hero-banner {
-  transition: opacity 0.3s ease;
-}
-
 .carousel-item.active .hero-banner {
   animation: fadeIn 1s ease-in-out;
 }
@@ -114,18 +109,6 @@ body {
   background-color: #e50914;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .hero-banner {
-    height: 60vh !important;
-  }
-}
-
-@media (max-width: 576px) {
-  .hero-banner {
-    height: 50vh !important;
-  }
-}
 
   .movie-carousel-container {
     display: flex;

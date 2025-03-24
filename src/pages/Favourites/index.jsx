@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import { useMultipleMoviesDetails } from "../../hooks/useMovie";
 import "./favourites.css";
+import {Link} from "react-router-dom"
 
 const FavoritesPage = () => {
   const [favoriteIds, setFavoriteIds] = useState(() =>
@@ -46,32 +47,33 @@ const FavoritesPage = () => {
         </Alert>
       )}
 
-<Row xs={1} md={2} lg={4} className="g-4 justify-content-center">
-
+      <Row xs={1} md={2} lg={4} className="g-4 justify-content-center">
         {fetchedMovies.map((movie) => (
-          <Col key={movie.id}>
-            <Card className="h-100 movie-card">
-              <Card.Img
-                variant="top"
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                className="card-img-top"
-              />
-              <Card.Body>
-                <Card.Title>{movie.title}</Card.Title>
-                <Card.Text className="text-muted">
-                  Rating: {movie.vote_average.toFixed(1)}
-                </Card.Text>
-                <Button
-                  variant="danger"
-                  className="w-100"
-                  onClick={() => removeFromFavorites(movie.id)}
-                >
-                  Remove from Favorites
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
+          <Link key={movie.id} to={`/movie/${movie.id}`}>
+            <Col>
+              <Card className="h-100 movie-card">
+                <Card.Img
+                  variant="top"
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  className="card-img-top"
+                />
+                <Card.Body>
+                  <Card.Title>{movie.title}</Card.Title>
+                  <Card.Text className="text-muted">
+                    Rating: {movie.vote_average.toFixed(1)}
+                  </Card.Text>
+                  <Button
+                    variant="danger"
+                    className="w-100"
+                    onClick={() => removeFromFavorites(movie.id)}
+                  >
+                    Remove from Favorites
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>{" "}
+          </Link>
         ))}
       </Row>
     </Container>

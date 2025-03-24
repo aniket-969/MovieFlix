@@ -31,7 +31,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
       if (autoPlayRef.current) {
         autoPlayRef.current();
       }
-    }, 5000); // Change slide every 5 seconds
+    }, 7000); // Change slide every 7 seconds
 
     return () => clearInterval(interval);
   }, []);
