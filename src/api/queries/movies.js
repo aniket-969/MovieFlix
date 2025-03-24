@@ -1,28 +1,58 @@
-import axiosClient from "../axiosClient";
+import axiosClient from "./axiosClient";
 
-export const fetchMovies = async (searchTerm, page = 1) => {
-  return axiosClient.get("/", {
-    params: { s: searchTerm, page: page },
+// Fetch Latest Movies (Hero Banner)
+export const fetchLatestMovies = async (page = 1) => {
+  return axiosClient.get("/movie/now_playing", {
+    params: { page },
   });
 };
 
-export const fetchMovieDetails = async (imdbID) => {
-  const response = await axiosClient.get("", {
-    params: { i: imdbID, plot: "full" }, // ✅ Correct way to append params
+// Fetch Popular Movies (Movie Grid)
+export const fetchPopularMovies = async (page = 1) => {
+  return axiosClient.get("/movie/popular", {
+    params: { page },
   });
-  return response.data;
 };
 
-export const searchMovies = async (query, page = 1) => {
-  const response = await axiosClient.get("", {
-    params: { s: query, page },
-  });
-  return response.data;
+// Fetch Movie Details by ID
+export const fetchMovieDetails = async (movieId) => {
+  return axiosClient.get(`/movie/${movieId}`);
 };
 
-export const fetchLatestMovies = async (query = "2025", page = 1) => {
-  const response = await axiosClient.get("", {
-    params: { s: query, y: 2025, type: "movie", page },
+// Fetch Movie Genres
+export const fetchMovieGenres = async () => {
+  return axiosClient.get("/genre/movie/list");
+};
+
+// Fetch Movies by Genre
+export const fetchMoviesByGenre = async (genreId, page = 1) => {
+  return axiosClient.get("/discover/movie", {
+    params: { with_genres: genreId, page },
   });
-  return response.data;
+};
+
+// Search Movies by Title
+export const searchMovies = async (searchTerm, page = 1) => {
+  return axiosClient.get("/search/movie", {
+    params: { query: searchTerm, page },
+  });
+};
+
+// Fetch Top-Rated Movies (Optional)
+export const fetchTopRatedMovies = async (page = 1) => {
+  return axiosClient.get("/movie/top_rated", {
+    params: { page },
+  });
+};
+
+// Fetch Similar Movies (Optional)
+export const fetchSimilarMovies = async (movieId, page = 1) => {
+  return axiosClient.get(`/movie/${movieId}/similar`, {
+    params: { page },
+  });
+};
+
+// Fetch Movie Videos (For Trailers)
+export const fetchMovieVideos = async (movieId) => {
+  return axiosClient.get(`/movie/${movieId}/videos`);
 };

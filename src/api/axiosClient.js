@@ -1,9 +1,10 @@
-import axios from "axios"
+import axios from "axios";
 
 const axiosClient = axios.create({
-    baseURL: "http://www.omdbapi.com/",
+    baseURL: "https://api.themoviedb.org/3/",
     params: {
-        apikey: import.meta.env.VITE_OMDB_API_KEY, 
+        api_key: import.meta.env.VITE_TMDB_API_KEY,
+        language: "en-US",
     },
 });
 
