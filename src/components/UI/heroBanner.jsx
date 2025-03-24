@@ -31,7 +31,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
       if (autoPlayRef.current) {
         autoPlayRef.current();
       }
-    }, 8000); // Change slide every 8 seconds
+    }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -90,12 +90,12 @@ const NetflixHeroBanner = ({ movies, loading }) => {
       >
         <div className="container">
           <div className="row">
-            <div className="col-md-6 col-lg-5 ps-4 ps-md-5 hero-content">
+            <div className="col-md-8 col-lg-6 ps-4 ps-md-5 hero-content">
               <h1
-                className="display-3 fw-bold mb-2"
+                className="display-5 fw-bold mb-2 text-truncate-2-lines"
                 style={{
                   textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
-                  maxWidth: "600px",
+                  maxWidth: "100%",
                 }}
               >
                 {currentMovie.title}
@@ -117,10 +117,10 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
               {/* Overview */}
               <p
-                className="lead mb-4"
+                className="lead mb-4 text-truncate-3-lines"
                 style={{
                   textShadow: "1px 1px 3px rgba(0,0,0,0.7)",
-                  maxWidth: "600px",
+                  maxWidth: "100%",
                 }}
               >
                 {currentMovie.overview?.substring(0, 180)}

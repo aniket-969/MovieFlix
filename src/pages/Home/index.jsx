@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMovies } from "../../hooks/useMovie";
-import NetflixHeroBanner from "../../components/UI/netflixCarousel";
+import NetflixHeroBanner from "../../components/UI/heroBanner";
 import ResultsOverlay from "../../components/UI/overlay";
 import MovieGrid from "./../../components/UI/movieGrid";
 import NetflixNavbar from "../../components/UI/navbar";

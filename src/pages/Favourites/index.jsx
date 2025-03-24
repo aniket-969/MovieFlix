@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Spinner, Alert, Button } from "react-bootstrap";
-import { useMultipleMoviesDetails } from "../../hooks/useMovie"; 
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Spinner,
+  Alert,
+  Button,
+} from "react-bootstrap";
+import { useMultipleMoviesDetails } from "../../hooks/useMovie";
 import "./favourites.css";
 
 const FavoritesPage = () => {
-  const [favoriteIds, setFavoriteIds] = useState(() => 
+  const [favoriteIds, setFavoriteIds] = useState(() =>
     JSON.parse(localStorage.getItem("favorites") || "[]")
   );
 
-  const { movies: fetchedMovies, loading, error } = useMultipleMoviesDetails(favoriteIds);
+  const {
+    movies: fetchedMovies,
+    loading,
+    error,
+  } = useMultipleMoviesDetails(favoriteIds);
 
   const removeFromFavorites = (movieId) => {
     const updatedFavorites = favoriteIds.filter((id) => id != movieId);
@@ -18,7 +30,7 @@ const FavoritesPage = () => {
 
   return (
     <Container fluid className="favorites-page p-4">
-      <h1 className="text-center mb-4">My Favorites</h1>
+      <h1 className="text-center mb-4 text-dark">My Favorites</h1>
 
       {loading && (
         <div className="text-center">
@@ -34,7 +46,8 @@ const FavoritesPage = () => {
         </Alert>
       )}
 
-      <Row xs={1} md={2} lg={4} className="g-4">
+<Row xs={1} md={2} lg={4} className="g-4 justify-content-center">
+
         {fetchedMovies.map((movie) => (
           <Col key={movie.id}>
             <Card className="h-100 movie-card">
@@ -46,8 +59,14 @@ const FavoritesPage = () => {
               />
               <Card.Body>
                 <Card.Title>{movie.title}</Card.Title>
-                <Card.Text className="text-muted">Rating: {movie.vote_average.toFixed(1)}</Card.Text>
-                <Button variant="danger" className="w-100" onClick={() => removeFromFavorites(movie.id)}>
+                <Card.Text className="text-muted">
+                  Rating: {movie.vote_average.toFixed(1)}
+                </Card.Text>
+                <Button
+                  variant="danger"
+                  className="w-100"
+                  onClick={() => removeFromFavorites(movie.id)}
+                >
                   Remove from Favorites
                 </Button>
               </Card.Body>

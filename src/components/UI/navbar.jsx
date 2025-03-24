@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import ThemeToggleButton from "./../ThemeToggle";
 
 const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,7 +24,6 @@ const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
     };
   }, []);
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -44,7 +44,7 @@ const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
   // Group genres into categories for dropdown
   const genreCategories = {
     "Popular Genres": genres.slice(0, 4),
-    "Movie Genres": genres.slice(5, 8)
+    "Movie Genres": genres.slice(5, 8),
   };
 
   return (
@@ -60,6 +60,7 @@ const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
             NETFLIX
           </Link>
 
+          <ThemeToggleButton />
           <button
             className="navbar-toggler"
             type="button"
@@ -162,8 +163,6 @@ const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
           </div>
         </div>
       </nav>
-
-      
 
       {/* Custom CSS */}
       <style jsx="true">{`
