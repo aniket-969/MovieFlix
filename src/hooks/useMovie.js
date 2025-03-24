@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import {
-  fetchLatestMovies,
-  fetchPopularMovies,
-  fetchMovieGenres,
-  fetchMoviesByGenre,
-  searchMovies,
-} from "../api/queries/movies.js";
+import { 
+  fetchLatestMovies, 
+  fetchPopularMovies, 
+  fetchTrendingMovies, 
+  fetchMovieGenres, 
+  fetchMoviesByGenre, 
+  searchMovies 
+} from "../api/movieApi";
 
 const useMovies = (type = "popular", genreId = null, searchTerm = "") => {
   const [movies, setMovies] = useState([]);
@@ -15,15 +16,16 @@ const useMovies = (type = "popular", genreId = null, searchTerm = "") => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const storageKey = `movies-${type}-${genreId || "all"}-${
-    searchTerm || "all"
-  }-page-${page}`;
+  const storageKey = `movies-${type}-${genreId || "all"}-${searchTerm || "all"}-page-${page}`;
 
   useEffect(() => {
     const fetchMovies = async () => {
       if (page > totalPages) return; 
 
-      // session storage check
+      // If new search/genre, reset state
+      if (page === 1) setMovies([]);
+
+      // Check session storage
       const cachedData = sessionStorage.getItem(storageKey);
       if (cachedData) {
         const { results, total_pages } = JSON.parse(cachedData);
@@ -49,12 +51,15 @@ const useMovies = (type = "popular", genreId = null, searchTerm = "") => {
             case "popular":
               response = await fetchPopularMovies(page);
               break;
+            case "trending":
+              response = await fetchTrendingMovies(page);
+              break;
             default:
               response = await fetchPopularMovies(page);
           }
         }
 
-        setMovies((prevMovies) => [...prevMovies, ...response.data.results]);
+        setMovies((prevMovies) => (page === 1 ? response.data.results : [...prevMovies, ...response.data.results]));
         setTotalPages(response.data.total_pages);
 
         // Store in session storage
@@ -88,7 +93,12 @@ const useMovies = (type = "popular", genreId = null, searchTerm = "") => {
     fetchGenres();
   }, []);
 
-  //  loading more pages
+  // Reset page when search term or genre changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, genreId]);
+
+  // Load more pages
   const loadMore = () => {
     if (page < totalPages) {
       setPage((prevPage) => prevPage + 1);
