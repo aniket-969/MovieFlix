@@ -1,0 +1,17 @@
+.favorites-page {
+    background-color: #f4f4f4;
+  }
+  
+  .movie-card {
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  .movie-card:hover {
+    transform: scale(1.03);
+  }
+  
+  .card-img-top {
+    object-fit: cover;
+    height: 350px;
+  }

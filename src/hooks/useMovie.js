@@ -148,3 +148,44 @@ export const useMovieDetails = (movieId) => {
 
   return { movie, loading, error };
 };
+
+export const useMultipleMoviesDetails = (movieIds) => {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!movieIds.length) {
+      setMovies([]);
+      return;
+    }
+
+    const fetchMovies = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const moviePromises = movieIds.map(async (id) => {
+          try {
+            const response = await fetchMovieDetails(id);
+            return response.data;
+          } catch (err) {
+            console.error(`Failed to fetch movie ${id}:`, err);
+            return null;
+          }
+        });
+
+        const fetchedMovies = await Promise.all(moviePromises);
+        setMovies(fetchedMovies.filter((movie) => movie !== null));
+      } catch (err) {
+        setError("Failed to fetch movie details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, [movieIds]); // Re-run when `movieIds` change
+
+  return { movies, loading, error };
+};
