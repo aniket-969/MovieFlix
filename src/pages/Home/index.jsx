@@ -73,7 +73,7 @@ const Home = () => {
     selectedGenre || debouncedSearchTerm ? resultsLoading : popularLoading;
 
   return (
-    <div className="netflix-home min-vh-100 bg-black text-white">
+    <div className="netflix-home min-vh-100 bg-var-primary text-white">
       <Navbar
         onSearch={handleSearch}
         onGenreSelect={handleGenreSelect}

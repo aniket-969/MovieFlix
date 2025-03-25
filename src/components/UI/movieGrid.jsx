@@ -42,15 +42,7 @@ const MovieCarousel = ({ title, movies, loading, viewAll = false }) => {
     }
   };
   
-  if (loading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border text-danger" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }if (loading) {
+ if (loading) {
     return <SpinnerComponent />;
   }
   
@@ -62,13 +54,12 @@ const MovieCarousel = ({ title, movies, loading, viewAll = false }) => {
     );
   }
 
-  // Display all movies if viewAll is true, otherwise display maximum 20
   const displayMovies = movies.slice(0, 20);
 
   return (
     <div className="movie-carousel mb-5">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="fs-4 fw-bold mb-0">{title}</h2>
+        <h2 className="fs-4 fw-bold mb-0 text-var-primary">{title}</h2>
         
       </div>
       

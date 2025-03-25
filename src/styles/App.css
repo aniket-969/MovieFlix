@@ -1,3 +1,43 @@
+/* Light Mode */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --primary-color: #e50914;
+  --secondary-color: #b81d24;
+  --rating-color: #f5c518; 
+  --card-bg-color: #f8f9fa; 
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --genre-badge-bg: #ddd;
+  --favorite-btn-bg: #dc3545;  
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --bg-color: #141414;
+  --text-color: #ffffff;
+  --primary-color: #e50914;
+  --secondary-color: #b81d24;
+  --rating-color: #f5c518; 
+  --card-bg-color: #1e1e1e; 
+  --card-shadow: rgba(255, 255, 255, 0.1);
+  --genre-badge-bg: #444;
+  --favorite-btn-bg: #e50914;
+}
+
+.bg-var-primary{
+  background-color: var(--bg-color);
+}
+
+.text-var-primary{
+  color: var(--text-color);
+}
+/* Apply Variables */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
 
 
 .theme-toggle-btn {
@@ -17,7 +57,7 @@
 }
 
 .theme-toggle-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .theme-toggle-btn svg {
@@ -27,12 +67,7 @@
 [data-theme="dark"] .theme-toggle-btn svg {
   transform: rotate(180deg);
 }
-/* General Styles */
-body {
-  background-color: #141414;
-  color: #fff;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
+
 
 /* Hide scrollbars but allow scrolling */
 .carousel-container::-webkit-scrollbar {
