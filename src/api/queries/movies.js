@@ -28,6 +28,7 @@ export const fetchLatestMovies = (page = 1) => {
   
   // Fetch movies by genre
   export const fetchMoviesByGenre = (genreId, page = 1) => {
+    console.log(genreId)
     return axiosClient.get("/discover/movie", {
       params: {
         with_genres: genreId,

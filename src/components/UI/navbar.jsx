@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggleButton from "./../ThemeToggle";
-const NetflixNavbar = ({
+import "../../styles/navbar.css"
+
+const Navbar = ({
   onSearch,
   genres,
   onGenreSelect,
   searchTerm,
   setSearchTerm,
+  selectedGenre, 
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -28,20 +31,43 @@ const NetflixNavbar = ({
     };
   }, []);
 
+  // Focus search input when search is toggled
+  useEffect(() => {
+    if (showSearch && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showSearch]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       onSearch(searchTerm.trim());
+      setShowSearch(true);
     }
   };
 
   const handleSearchToggle = () => {
     setShowSearch(!showSearch);
     if (!showSearch) {
-      // Will focus via useEffect
+      // Prepare for focus via useEffect
+      searchInputRef.current?.focus();
     } else {
       setSearchTerm("");
     }
+  };
+
+  const handleGenreClick = (genreId) => {
+    // Find the genre name for the selected genre ID
+    const selectedGenreName = genres.find(genre => genre.id === genreId)?.name || "Selected";
+    console.log(genreId)
+    // Call genre select handler
+    onGenreSelect(genreId);
+    
+    // Close search if open
+    setShowSearch(false);
+    
+    // Clear search term
+    setSearchTerm("");
   };
 
   // Group genres into categories for dropdown
@@ -114,8 +140,10 @@ const NetflixNavbar = ({
                         {genreList.map((genre) => (
                           <button
                             key={genre.id}
-                            className="dropdown-item"
-                            onClick={() => onGenreSelect(genre.id)}
+                            className={`dropdown-item ${
+                              selectedGenre === genre.name ? 'active' : ''
+                            }`}
+                            onClick={() => handleGenreClick(genre.id)}
                           >
                             {genre.name}
                           </button>
@@ -155,6 +183,16 @@ const NetflixNavbar = ({
                   >
                     <i className="bi bi-search"></i>
                   </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm position-absolute end-0 top-0 bottom-0 text-white-50 me-5"
+                    onClick={() => {
+                      setShowSearch(false);
+                      setSearchTerm("");
+                    }}
+                  >
+                    <i className="bi bi-x-lg"></i>
+                  </button>
                 </form>
               ) : (
                 <button
@@ -170,44 +208,10 @@ const NetflixNavbar = ({
         </div>
       </nav>
 
-      {/* Custom CSS */}
-      <style jsx="true">{`
-        .transition-all {
-          transition: background-color 0.3s ease;
-        }
-
-        .bg-gradient-to-b {
-          background-image: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.8) 0%,
-            rgba(0, 0, 0, 0) 100%
-          );
-        }
-
-        /* Override Bootstrap dropdown styles for Netflix feel */
-        .dropdown-menu-dark {
-          background-color: rgba(20, 20, 20, 0.9);
-          border-radius: 2px;
-          margin-top: 10px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dropdown-item:hover {
-          background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 991.98px) {
-          .navbar-collapse {
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 1rem;
-            border-radius: 4px;
-            margin-top: 0.5rem;
-          }
-        }
-      `}</style>
+    
     </div>
   );
 };
 
-export default NetflixNavbar;
+export default Navbar;
+

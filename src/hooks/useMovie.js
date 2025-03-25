@@ -7,7 +7,6 @@ import {
   fetchMoviesByGenre,
   searchMovies,
 } from "../api/queries/movies.js";
-
 export const useMovies = (
   type = "popular",
   genreId = null,
@@ -46,9 +45,12 @@ export const useMovies = (
       try {
         let response;
         if (searchTerm) {
+          console.log("in search")
           response = await searchMovies(searchTerm, page);
         } else if (genreId) {
+          console.log("in genre")
           response = await fetchMoviesByGenre(genreId, page);
+          console.log(response)
         } else {
           switch (type) {
             case "latest":
@@ -87,10 +89,12 @@ export const useMovies = (
       }
     };
 
-    // Only fetch if search term is not empty
-    if (type === "search" && searchTerm.trim()) {
-      fetchMovies();
-    } else if (type !== "search") {
+    //  fetch if search term is not empty or genre is selected
+    if (
+      (type === "search" && searchTerm.trim()) ||
+      (type === "genre" && genreId) ||
+      type !== "search"
+    ) {
       fetchMovies();
     }
   }, [type, genreId, searchTerm, page]);

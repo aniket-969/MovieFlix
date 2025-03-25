@@ -2,7 +2,7 @@ import { useState, lazy, Suspense } from "react";
 import { useMovies } from "../../hooks/useMovie";
 import NetflixHeroBanner from "../../components/UI/heroBanner";
 import MovieGrid from "./../../components/UI/movieGrid";
-import NetflixNavbar from "../../components/UI/navbar";
+import Navbar from "../../components/UI/navbar";
 import SpinnerComponent from "../../components/UI/spinner";
 import useDebounce from "../../hooks/useDebounce";
 
@@ -13,12 +13,19 @@ const Home = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [showResults, setShowResults] = useState(false);
 
-  //  debounce hook for search term
+  // Use debounce hook for search term
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   // Fetch latest movies for hero banner
   const { movies: latestMovies, loading: latestLoading } = useMovies("latest");
   const { genres } = useMovies();
+
+  // Fetch movies based on genre or search
+  const { movies: resultsMovies, loading: resultsLoading } = useMovies(
+    selectedGenre ? "genre" : debouncedSearchTerm ? "search" : "popular",
+    selectedGenre,
+    debouncedSearchTerm
+  );
 
   // Fetch popular movies for first grid
   const { movies: popularMovies, loading: popularLoading } =
@@ -28,62 +35,74 @@ const Home = () => {
   const { movies: trendingMovies, loading: trendingLoading } =
     useMovies("trending");
 
-  // Search results with debounced search term
-  const { movies: searchResults, loading: searchLoading } = useMovies(
-    debouncedSearchTerm ? "search" : "popular",
-    null,
-    debouncedSearchTerm
-  );
-
+  // Handle search functionality
   const handleSearch = (term) => {
     setSearchTerm(term);
     setSelectedGenre(null);
     setShowResults(!!term);
   };
 
+  // Handle genre selection
+  const handleGenreSelect = (genreId) => {
+    setSelectedGenre(genreId);
+    setSearchTerm("");
+    setShowResults(true);
+  };
+
   const closeResults = () => {
     setSearchTerm("");
+    setSelectedGenre(null);
     setShowResults(false);
   };
 
-  // Determining results to show and the title
-  const resultsToShow = debouncedSearchTerm ? searchResults : popularMovies;
-  const resultsTitle = debouncedSearchTerm
-    ? `Results for "${debouncedSearchTerm}"`
-    : selectedGenre
+  // Determine results to show and title
+  const resultsToShow =
+    selectedGenre || debouncedSearchTerm ? resultsMovies : popularMovies;
+
+  const resultsTitle = selectedGenre
     ? `${selectedGenre} Movies`
+    : debouncedSearchTerm
+    ? `Results for "${debouncedSearchTerm}"`
     : "Popular Movies";
-  const isLoading = debouncedSearchTerm ? searchLoading : popularLoading;
+
+  const isLoading =
+    selectedGenre || debouncedSearchTerm ? resultsLoading : popularLoading;
 
   return (
     <div className="netflix-home min-vh-100 bg-black text-white">
-      <NetflixNavbar
+      <Navbar
         onSearch={handleSearch}
+        onGenreSelect={handleGenreSelect}
         genres={genres}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        selectedGenre={selectedGenre}
       />
 
       <div className={`${showResults ? "blur-sm" : ""}`}>
         <NetflixHeroBanner movies={latestMovies} loading={latestLoading} />
 
         <div className="container-fluid px-4 mt-n5 position-relative">
-          <MovieGrid
-            title="Popular on Netflix"
-            movies={popularMovies}
-            loading={popularLoading}
-          />
+          {!showResults && (
+            <>
+              <MovieGrid
+                title="Popular on Netflix"
+                movies={popularMovies}
+                loading={popularLoading}
+              />
 
-          <MovieGrid
-            title="Trending This Week"
-            movies={trendingMovies}
-            loading={trendingLoading}
-          />
+              <MovieGrid
+                title="Trending This Week"
+                movies={trendingMovies}
+                loading={trendingLoading}
+              />
+            </>
+          )}
         </div>
       </div>
 
       {showResults && (
-        <Suspense fallback={<SpinnerComponent message="Searching movies..." />}>
+        <Suspense fallback={<SpinnerComponent message="Loading movies..." />}>
           <ResultsOverlay
             title={resultsTitle}
             movies={resultsToShow}
