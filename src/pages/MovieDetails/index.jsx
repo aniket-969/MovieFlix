@@ -14,6 +14,8 @@ import {
 import { addToFavorites } from "../../utils/addToWatchlist";
 import { FaStar, FaHeart, FaRegHeart, FaCalendarAlt } from "react-icons/fa";
 import "./MovieDetails.css";
+import SpinnerComponent from "./../../components/UI/spinner";
+import ErrorComponent from './../../components/UI/errorComponent';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -26,24 +28,16 @@ const MovieDetails = () => {
   const handleAddToFavorites = () => {
     setIsFavorite(addToFavorites(movieId));
   };
-
-  if (loading)
+  if (loading) {
     return (
-      <div className="loading-container">
-        <Spinner animation="border" variant="primary" />
-        <p>Loading movie details...</p>
-      </div>
+      <SpinnerComponent variant="primary" message="Loading movie details..." />
     );
+  }
 
-  if (error)
-    return (
-      <Container className="mt-5">
-        <Alert variant="danger">
-          <Alert.Heading>Error</Alert.Heading>
-          <p>{error}</p>
-        </Alert>
-      </Container>
-    );
+  if (error){
+   
+      return <ErrorComponent message={error} />;
+  }
 
   if (!movie)
     return (

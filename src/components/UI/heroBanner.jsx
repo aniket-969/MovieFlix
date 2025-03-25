@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import SpinnerComponent from './spinner';
 
 const NetflixHeroBanner = ({ movies, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -39,14 +40,8 @@ const NetflixHeroBanner = ({ movies, loading }) => {
   if (loading || displayMovies.length === 0) {
     return (
       <div className="vh-75 d-flex justify-content-center align-items-center bg-black">
-        {loading ? (
-          <div className="spinner-border text-danger" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        ) : (
-          <p className="fs-4">No featured movies available</p>
-        )}
-      </div>
+      {loading ? <SpinnerComponent /> : <p className="fs-4">No featured movies available</p>}
+    </div>
     );
   }
 

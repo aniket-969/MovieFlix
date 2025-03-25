@@ -11,6 +11,8 @@ import {
 import { useMultipleMoviesDetails } from "../../hooks/useMovie";
 import "./favourites.css";
 import {Link} from "react-router-dom"
+import SpinnerComponent from './../../components/UI/spinner';
+import ErrorComponent from './../../components/UI/errorComponent';
 
 const FavoritesPage = () => {
   const [favoriteIds, setFavoriteIds] = useState(() =>
@@ -34,12 +36,10 @@ const FavoritesPage = () => {
       <h1 className="text-center mb-4 text-dark">My Favorites</h1>
 
       {loading && (
-        <div className="text-center">
-          <Spinner animation="border" />
-        </div>
+       <SpinnerComponent/>
       )}
 
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error && <ErrorComponent message={error}/>}
 
       {favoriteIds.length === 0 && !loading && (
         <Alert variant="info" className="text-center">

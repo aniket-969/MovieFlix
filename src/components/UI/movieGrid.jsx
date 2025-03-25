@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import SpinnerComponent from './spinner';
 
 const MovieCarousel = ({ title, movies, loading, viewAll = false }) => {
   const [hoverIndex, setHoverIndex] = useState(-1);
@@ -49,6 +50,8 @@ const MovieCarousel = ({ title, movies, loading, viewAll = false }) => {
         </div>
       </div>
     );
+  }if (loading) {
+    return <SpinnerComponent />;
   }
   
   if (!movies || movies.length === 0) {
