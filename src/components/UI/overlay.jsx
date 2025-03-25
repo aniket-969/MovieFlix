@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import SpinnerComponent from './spinner';
 
 const ResultsOverlay = ({ title, movies, loading, onClose }) => {
   const [hoverIndex, setHoverIndex] = useState(-1);
-  
+  console.log(title)
   return (
     <div 
       className="position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-90 overflow-auto"
@@ -23,11 +24,7 @@ const ResultsOverlay = ({ title, movies, loading, onClose }) => {
         </div>
         
         {loading ? (
-          <div className="d-flex justify-content-center py-5">
-            <div className="spinner-border text-danger" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
+          <SpinnerComponent/>
         ) : movies.length === 0 ? (
           <div className="text-center py-5">
             <p className="fs-5 text-muted">No results found. Try a different search or genre.</p>

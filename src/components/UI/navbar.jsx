@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggleButton from "./../ThemeToggle";
-import "../../styles/navbar.css"
+import "../../styles/navbar.css";
 
 const Navbar = ({
   onSearch,
@@ -9,7 +9,7 @@ const Navbar = ({
   onGenreSelect,
   searchTerm,
   setSearchTerm,
-  selectedGenre, 
+  selectedGenre,
 }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,16 +57,9 @@ const Navbar = ({
   };
 
   const handleGenreClick = (genreId) => {
-    // Find the genre name for the selected genre ID
-    const selectedGenreName = genres.find(genre => genre.id === genreId)?.name || "Selected";
-    console.log(genreId)
     // Call genre select handler
     onGenreSelect(genreId);
-    
-    // Close search if open
     setShowSearch(false);
-    
-    // Clear search term
     setSearchTerm("");
   };
 
@@ -141,7 +134,7 @@ const Navbar = ({
                           <button
                             key={genre.id}
                             className={`dropdown-item ${
-                              selectedGenre === genre.name ? 'active' : ''
+                              selectedGenre === genre.name ? "active" : ""
                             }`}
                             onClick={() => handleGenreClick(genre.id)}
                           >
@@ -207,11 +200,8 @@ const Navbar = ({
           </div>
         </div>
       </nav>
-
-    
     </div>
   );
 };
 
 export default Navbar;
-

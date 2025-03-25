@@ -11,6 +11,7 @@ const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(null);
+  const [selectedGenreName, setSelectedGenreName] = useState(null);
   const [showResults, setShowResults] = useState(false);
 
   // Use debounce hook for search term
@@ -44,7 +45,10 @@ const Home = () => {
 
   // Handle genre selection
   const handleGenreSelect = (genreId) => {
+    console.log(genreId)
     setSelectedGenre(genreId);
+    const genreName = genres.find(genre => genre.id === genreId)?.name || "Selected";
+    setSelectedGenreName(genreName)
     setSearchTerm("");
     setShowResults(true);
   };
@@ -60,7 +64,7 @@ const Home = () => {
     selectedGenre || debouncedSearchTerm ? resultsMovies : popularMovies;
 
   const resultsTitle = selectedGenre
-    ? `${selectedGenre} Movies`
+    ? `${selectedGenreName} Movies`
     : debouncedSearchTerm
     ? `Results for "${debouncedSearchTerm}"`
     : "Popular Movies";
