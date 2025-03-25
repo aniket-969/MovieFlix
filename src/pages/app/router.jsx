@@ -1,8 +1,8 @@
 import {useMemo} from "react"
 import Home from './../Home/index';import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements } from "react-router-dom";
-import MovieDetails from "../MovieDetails";
-import Favourites from "../Favourites";
 
+const MovieDetails = lazy(() => import("../MovieDetails"));
+const Favourites = lazy(() => import("../Favourites"));
 
 const AppRouter = ()=>{
     const router = useMemo(

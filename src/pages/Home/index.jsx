@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState,lazy } from "react";
 import { useMovies } from "../../hooks/useMovie";
 import NetflixHeroBanner from "../../components/UI/heroBanner";
-import ResultsOverlay from "../../components/UI/overlay";
 import MovieGrid from "./../../components/UI/movieGrid";
 import NetflixNavbar from "../../components/UI/navbar";
 
+const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
 
 const Home = () => {
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [showResults, setShowResults] = useState(false);
@@ -14,6 +15,7 @@ const Home = () => {
   // Fetch latest movies for hero banner
   const { movies: latestMovies, loading: latestLoading } = useMovies("latest");
 const {genres} = useMovies()
+
   // Fetch popular movies for first grid
   const { movies: popularMovies, loading: popularLoading } =
     useMovies("popular");
@@ -75,12 +77,9 @@ const {genres} = useMovies()
 
       {/* Results Overlay */}
       {showResults && (
-        <ResultsOverlay
-          title={resultsTitle}
-          movies={resultsToShow}
-          loading={isLoading}
-          onClose={closeResults}
-        />
+        <Suspense fallback={<SpinnerComponent message="Searching movies..." />}>
+          <ResultsOverlay title={resultsTitle} movies={resultsToShow} loading={isLoading} onClose={closeResults} />
+        </Suspense>
       )}
     </div>
   );

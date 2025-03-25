@@ -15,7 +15,7 @@ import { addToFavorites } from "../../utils/addToWatchlist";
 import { FaStar, FaHeart, FaRegHeart, FaCalendarAlt } from "react-icons/fa";
 import "./MovieDetails.css";
 import SpinnerComponent from "./../../components/UI/spinner";
-import ErrorComponent from './../../components/UI/errorComponent';
+import ErrorComponent from "./../../components/UI/errorComponent";
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -34,9 +34,8 @@ const MovieDetails = () => {
     );
   }
 
-  if (error){
-   
-      return <ErrorComponent message={error} />;
+  if (error) {
+    return <ErrorComponent message={error} />;
   }
 
   if (!movie)

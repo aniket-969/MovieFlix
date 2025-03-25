@@ -118,7 +118,6 @@ export const useMovies = (
   return { movies, loading, error, genres, page, totalPages, loadMore };
 };
 
-
 import { fetchMovieDetails } from "../api/queries/movies";
 
 export const useMovieDetails = (movieId) => {
