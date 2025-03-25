@@ -1,5 +1,6 @@
-import {useMemo} from "react"
-import Home from './../Home/index';import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements } from "react-router-dom";
+import {useMemo,lazy} from "react"
+import Home from './../Home/index';
+import { createBrowserRouter, RouterProvider, Route, createRoutesFromElements } from "react-router-dom";
 
 const MovieDetails = lazy(() => import("../MovieDetails"));
 const Favourites = lazy(() => import("../Favourites"));

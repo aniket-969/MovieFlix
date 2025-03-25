@@ -1,8 +1,9 @@
-import { useState,lazy } from "react";
+import { useState,lazy,Suspense } from "react";
 import { useMovies } from "../../hooks/useMovie";
 import NetflixHeroBanner from "../../components/UI/heroBanner";
 import MovieGrid from "./../../components/UI/movieGrid";
 import NetflixNavbar from "../../components/UI/navbar";
+import SpinnerComponent from "../../components/UI/spinner"
 
 const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
 
