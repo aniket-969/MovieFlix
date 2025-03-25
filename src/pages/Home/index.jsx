@@ -1,21 +1,24 @@
-import { useState,lazy,Suspense } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useMovies } from "../../hooks/useMovie";
 import NetflixHeroBanner from "../../components/UI/heroBanner";
 import MovieGrid from "./../../components/UI/movieGrid";
 import NetflixNavbar from "../../components/UI/navbar";
-import SpinnerComponent from "../../components/UI/spinner"
+import SpinnerComponent from "../../components/UI/spinner";
+import useDebounce from "../../hooks/useDebounce";
 
 const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
 
 const Home = () => {
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [showResults, setShowResults] = useState(false);
 
+  //  debounce hook for search term
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   // Fetch latest movies for hero banner
   const { movies: latestMovies, loading: latestLoading } = useMovies("latest");
-const {genres} = useMovies()
+  const { genres } = useMovies();
 
   // Fetch popular movies for first grid
   const { movies: popularMovies, loading: popularLoading } =
@@ -25,11 +28,11 @@ const {genres} = useMovies()
   const { movies: trendingMovies, loading: trendingLoading } =
     useMovies("trending");
 
-  // Search results
+  // Search results with debounced search term
   const { movies: searchResults, loading: searchLoading } = useMovies(
-    showResults && searchTerm ? "search" : "popular",
+    debouncedSearchTerm ? "search" : "popular",
     null,
-    showResults ? searchTerm : ""
+    debouncedSearchTerm
   );
 
   const handleSearch = (term) => {
@@ -39,35 +42,38 @@ const {genres} = useMovies()
   };
 
   const closeResults = () => {
+    setSearchTerm("");
     setShowResults(false);
   };
 
-  // Determine which results to show and the title
-  const resultsToShow = searchTerm ? searchResults : popularMovies;
-  const resultsTitle = searchTerm ? `Results for "${searchTerm}"` : 
-    (selectedGenre ? `${selectedGenre} Movies` : "Popular Movies");
-  const isLoading = searchTerm ? searchLoading : popularLoading;
+  // Determining results to show and the title
+  const resultsToShow = debouncedSearchTerm ? searchResults : popularMovies;
+  const resultsTitle = debouncedSearchTerm
+    ? `Results for "${debouncedSearchTerm}"`
+    : selectedGenre
+    ? `${selectedGenre} Movies`
+    : "Popular Movies";
+  const isLoading = debouncedSearchTerm ? searchLoading : popularLoading;
 
   return (
     <div className="netflix-home min-vh-100 bg-black text-white">
-      {/* Add the Navbar component here, above the rest of the content */}
-      <NetflixNavbar onSearch={handleSearch} genres={genres}/>
-      
-      {/* Main Content - apply blur effect when overlay is shown */}
-      <div className={`${showResults ? "blur-sm" : ""}`}>
-        {/* Hero Banner */}
-        <NetflixHeroBanner movies={latestMovies} loading={latestLoading}  />
+      <NetflixNavbar
+        onSearch={handleSearch}
+        genres={genres}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
 
-        {/* Content Section with padding */}
+      <div className={`${showResults ? "blur-sm" : ""}`}>
+        <NetflixHeroBanner movies={latestMovies} loading={latestLoading} />
+
         <div className="container-fluid px-4 mt-n5 position-relative">
-          {/* Popular Movies Grid */}
           <MovieGrid
             title="Popular on Netflix"
             movies={popularMovies}
             loading={popularLoading}
           />
 
-          {/* Trending Movies Grid */}
           <MovieGrid
             title="Trending This Week"
             movies={trendingMovies}
@@ -76,10 +82,14 @@ const {genres} = useMovies()
         </div>
       </div>
 
-      {/* Results Overlay */}
       {showResults && (
         <Suspense fallback={<SpinnerComponent message="Searching movies..." />}>
-          <ResultsOverlay title={resultsTitle} movies={resultsToShow} loading={isLoading} onClose={closeResults} />
+          <ResultsOverlay
+            title={resultsTitle}
+            movies={resultsToShow}
+            loading={isLoading}
+            onClose={closeResults}
+          />
         </Suspense>
       )}
     </div>
@@ -87,4 +97,3 @@ const {genres} = useMovies()
 };
 
 export default Home;
-

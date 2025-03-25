@@ -87,7 +87,12 @@ export const useMovies = (
       }
     };
 
-    fetchMovies();
+    // Only fetch if search term is not empty
+    if (type === "search" && searchTerm.trim()) {
+      fetchMovies();
+    } else if (type !== "search") {
+      fetchMovies();
+    }
   }, [type, genreId, searchTerm, page]);
 
   useEffect(() => {

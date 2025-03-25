@@ -1,9 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggleButton from "./../ThemeToggle";
-
-const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+const NetflixNavbar = ({
+  onSearch,
+  genres,
+  onGenreSelect,
+  searchTerm,
+  setSearchTerm,
+}) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const searchInputRef = useRef(null);
@@ -28,7 +32,6 @@ const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       onSearch(searchTerm.trim());
-      setSearchTerm("");
     }
   };
 
@@ -140,7 +143,10 @@ const NetflixNavbar = ({ onSearch, genres, onGenreSelect }) => {
                     className="form-control bg-dark text-white"
                     placeholder="Titles, people, genres"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      onSearch(e.target.value);
+                    }}
                     style={{ width: "240px" }}
                   />
                   <button
