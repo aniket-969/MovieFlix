@@ -52,8 +52,8 @@ body {
 }
 
 .theme-toggle-btn {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -71,13 +71,6 @@ body {
   transform: scale(1.05);
 }
 
-.theme-toggle-btn svg {
-  transition: transform 0.3s ease-in-out;
-}
-
-[data-theme="dark"] .theme-toggle-btn svg {
-  transform: rotate(180deg);
-}
 
 
 /* Hide scrollbars but allow scrolling */
@@ -156,71 +149,3 @@ body {
 .genre-pill.active {
   background-color: #e50914;
 }
-
-
-  .movie-carousel-container {
-    display: flex;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 1rem 0;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-  }
-  
-  .movie-carousel-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-  
-  .movie-card-container {
-    flex: 0 0 auto;
-    width: calc(100% / 5); /* 5 visible at once */
-    padding: 0 0.25rem;
-  }
-  
-  .carousel-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .carousel-arrow:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-  
-  .left-arrow {
-    left: -15px;
-  }
-  
-  .right-arrow {
-    right: -15px;
-  }
-  
-  @media (max-width: 1199px) {
-    .movie-card-container {
-      width: calc(100% / 4); /* 4 visible on medium screens */
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .movie-card-container {
-      width: calc(100% / 3); /* 3 visible on small screens */
-    }
-  }
-  
-  @media (max-width: 575px) {
-    .movie-card-container {
-      width: calc(100% / 2); /* 2 visible on extra small screens */
-    }
-  }

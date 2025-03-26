@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/heroBanner.css";
-import SpinnerComponent from './spinner';
-
+import SpinnerComponent from "./spinner";
 
 const NetflixHeroBanner = ({ movies, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -10,7 +9,9 @@ const NetflixHeroBanner = ({ movies, loading }) => {
   const autoPlayRef = useRef(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  const displayMovies = movies.filter((movie) => movie.backdrop_path).slice(0, 5);
+  const displayMovies = movies
+    .filter((movie) => movie.backdrop_path)
+    .slice(0, 5);
 
   useEffect(() => {
     if (displayMovies.length === 0) return;
@@ -40,7 +41,11 @@ const NetflixHeroBanner = ({ movies, loading }) => {
     return (
       <div className="vh-75 d-flex justify-content-center align-items-center">
         <Suspense fallback={<p>Loading...</p>}>
-          {loading ? <SpinnerComponent /> : <p className="fs-4">No featured movies available</p>}
+          {loading ? (
+            <SpinnerComponent />
+          ) : (
+            <p className="fs-4">No featured movies available</p>
+          )}
         </Suspense>
       </div>
     );
@@ -51,7 +56,10 @@ const NetflixHeroBanner = ({ movies, loading }) => {
   return (
     <div className="netflix-hero position-relative mb-5">
       {/* Video/Image Background */}
-      <div className="hero-background" style={{ height: "75vh", overflow: "hidden" }}>
+      <div
+        className="hero-background"
+        style={{ height: "75vh", overflow: "hidden" }}
+      >
         <div
           className={`position-absolute w-100 h-100 bg-cover bg-center transition-opacity ${
             isTransitioning ? "opacity-0" : "opacity-100"
@@ -121,7 +129,10 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
               {/* Action Buttons */}
               <div className="d-flex flex-wrap gap-2">
-                <Link to={`/movie/${currentMovie.id}`} className="btn btn-secondary btn-lg px-4">
+                <Link
+                  to={`/movie/${currentMovie.id}`}
+                  className="btn btn-secondary btn-lg px-4"
+                >
                   <i className="bi bi-info-circle me-2"></i>
                   More Info
                 </Link>
@@ -138,7 +149,9 @@ const NetflixHeroBanner = ({ movies, loading }) => {
             <button
               key={index}
               type="button"
-              className={`netflix-indicator mx-1 ${index === activeIndex ? "active" : ""}`}
+              className={`netflix-indicator mx-1 ${
+                index === activeIndex ? "active" : ""
+              }`}
               onClick={() => {
                 setIsTransitioning(true);
                 setTimeout(() => {
@@ -149,7 +162,10 @@ const NetflixHeroBanner = ({ movies, loading }) => {
               style={{
                 width: "12px",
                 height: "2px",
-                background: index === activeIndex ? "#e50914" : "rgba(255, 255, 255, 0.5)",
+                background:
+                  index === activeIndex
+                    ? "#e50914"
+                    : "rgba(255, 255, 255, 0.5)",
                 border: "none",
                 cursor: "pointer",
                 padding: 0,

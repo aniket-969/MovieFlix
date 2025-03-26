@@ -1,12 +1,13 @@
 import { useState, lazy, Suspense, useMemo } from "react"; // Added useMemo
 import { useMovies } from "../../hooks/useMovie";
 import NetflixHeroBanner from "../../components/UI/heroBanner";
-import MovieGrid from "./../../components/UI/movieGrid";
+// import MovieGrid from "./../../components/UI/movieGrid";
 import Navbar from "../../components/UI/navbar";
 import SpinnerComponent from "../../components/UI/spinner";
 import useDebounce from "../../hooks/useDebounce";
 
 const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
+const MovieGrid = lazy(() => import("./../../components/UI/movieGrid"));
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,13 +23,16 @@ const Home = () => {
 
   // Memoize genre name selection to prevent unnecessary re-renders
   const selectedGenreName = useMemo(() => {
-    return genres.find((genre) => genre.id === selectedGenre)?.name || "Selected";
+    return (
+      genres.find((genre) => genre.id === selectedGenre)?.name || "Selected"
+    );
   }, [selectedGenre, genres]);
 
   // Memoize the movie fetch parameters to optimize performance
   const movieFetchParams = useMemo(() => {
     if (selectedGenre) return { type: "genre", genreId: selectedGenre };
-    if (debouncedSearchTerm) return { type: "search", searchTerm: debouncedSearchTerm };
+    if (debouncedSearchTerm)
+      return { type: "search", searchTerm: debouncedSearchTerm };
     return { type: "popular" };
   }, [selectedGenre, debouncedSearchTerm]);
 
@@ -40,8 +44,10 @@ const Home = () => {
   );
 
   // Fetch popular and trending movies
-  const { movies: popularMovies, loading: popularLoading } = useMovies("popular");
-  const { movies: trendingMovies, loading: trendingLoading } = useMovies("trending");
+  const { movies: popularMovies, loading: popularLoading } =
+    useMovies("popular");
+  const { movies: trendingMovies, loading: trendingLoading } =
+    useMovies("trending");
 
   // Memoize results title and loading state
   const { resultsToShow, resultsTitle, isLoading } = useMemo(() => {
@@ -49,24 +55,32 @@ const Home = () => {
       return {
         resultsToShow: resultsMovies,
         resultsTitle: `${selectedGenreName} Movies`,
-        isLoading: resultsLoading
+        isLoading: resultsLoading,
       };
     }
-    
+
     if (debouncedSearchTerm) {
       return {
         resultsToShow: resultsMovies,
         resultsTitle: `Results for "${debouncedSearchTerm}"`,
-        isLoading: resultsLoading
+        isLoading: resultsLoading,
       };
     }
-    
+
     return {
       resultsToShow: popularMovies,
       resultsTitle: "Popular Movies",
-      isLoading: popularLoading
+      isLoading: popularLoading,
     };
-  }, [selectedGenre, debouncedSearchTerm, resultsMovies, popularMovies, selectedGenreName, resultsLoading, popularLoading]);
+  }, [
+    selectedGenre,
+    debouncedSearchTerm,
+    resultsMovies,
+    popularMovies,
+    selectedGenreName,
+    resultsLoading,
+    popularLoading,
+  ]);
 
   // Handle search functionality
   const handleSearch = (term) => {
