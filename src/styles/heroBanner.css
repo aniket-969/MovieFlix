@@ -72,7 +72,16 @@
     }
   }
 
-  /* Hero banner styles */
-.hero-banner {
-    transition: opacity 0.3s ease;
+  .transition-opacity {
+    transition: opacity 0.3s ease-in-out;
   }
+  
+  .opacity-0 {
+    opacity: 0;
+  }
+  
+  .opacity-100 {
+    opacity: 1;
+  }
+  
+  

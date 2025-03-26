@@ -72,7 +72,9 @@ const Navbar = ({
   return (
     <div
       className={`fixed-top transition-all ${
-        isScrolled ? "bg-black" : "bg-gradient-to-b from-black to-transparent"
+        isScrolled
+          ? "bg-black"
+          : "bg-gradient-to-b from-black to-transparent "
       }`}
     >
       <nav className="navbar navbar-expand-lg navbar-dark">
@@ -81,7 +83,7 @@ const Navbar = ({
           <Link className="navbar-brand text-danger fw-bold" to="/">
             NETFLIX
           </Link>
-
+          {/* Theme Toggle */}
           <ThemeToggleButton />
           <button
             className="navbar-toggler"

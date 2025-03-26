@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import SpinnerComponent from './spinner';
+import SpinnerComponent from "./spinner";
+import "../../styles/heroBanner.css";
 
 const NetflixHeroBanner = ({ movies, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -20,8 +21,8 @@ const NetflixHeroBanner = ({ movies, loading }) => {
       setIsTransitioning(true);
       setTimeout(() => {
         setActiveIndex((current) => (current + 1) % displayMovies.length);
-        setTimeout(() => setIsTransitioning(false), 500);
-      }, 500);
+        setTimeout(() => setIsTransitioning(false), 300);
+      }, 300);
     };
 
     autoPlayRef.current = play;
@@ -39,20 +40,24 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
   if (loading || displayMovies.length === 0) {
     return (
-      <div className="vh-75 d-flex justify-content-center align-items-center bg-black">
-      {loading ? <SpinnerComponent /> : <p className="fs-4">No featured movies available</p>}
-    </div>
+      <div className="vh-75 d-flex justify-content-center align-items-center">
+        {loading ? (
+          <SpinnerComponent />
+        ) : (
+          <p className="fs-4">No featured movies available</p>
+        )}
+      </div>
     );
   }
 
   const currentMovie = displayMovies[activeIndex];
 
   return (
-    <div className="netflix-hero position-relative">
+    <div className="netflix-hero position-relative mb-5">
       {/* Video/Image Background */}
       <div
         className="hero-background"
-        style={{ height: "85vh", overflow: "hidden" }}
+        style={{ height: "75vh", overflow: "hidden" }}
       >
         <div
           className={`position-absolute w-100 h-100 bg-cover bg-center transition-opacity ${
@@ -62,7 +67,6 @@ const NetflixHeroBanner = ({ movies, loading }) => {
             backgroundImage: `url(https://image.tmdb.org/t/p/original${currentMovie.backdrop_path})`,
             backgroundSize: "cover",
             backgroundPosition: "center top",
-            transition: "opacity 0.5s ease-in-out",
           }}
         >
           {/* Gradient Overlay */}
@@ -80,7 +84,9 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
       {/* Content Area */}
       <div
-        className="hero-content position-absolute top-0 left-0 w-100 h-100 d-flex align-items-center"
+        className={`hero-content position-absolute top-0 left-0 w-100 h-100 d-flex align-items-center transition-opacity ${
+          isTransitioning ? "opacity-0" : "opacity-100"
+        }`}
         style={{ zIndex: 2 }}
       >
         <div className="container">

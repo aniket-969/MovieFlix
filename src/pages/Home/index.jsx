@@ -45,10 +45,11 @@ const Home = () => {
 
   // Handle genre selection
   const handleGenreSelect = (genreId) => {
-    console.log(genreId)
+    console.log(genreId);
     setSelectedGenre(genreId);
-    const genreName = genres.find(genre => genre.id === genreId)?.name || "Selected";
-    setSelectedGenreName(genreName)
+    const genreName =
+      genres.find((genre) => genre.id === genreId)?.name || "Selected";
+    setSelectedGenreName(genreName);
     setSearchTerm("");
     setShowResults(true);
   };
@@ -74,6 +75,7 @@ const Home = () => {
 
   return (
     <div className="netflix-home min-vh-100 bg-var-primary text-white">
+      {/* navbar */}
       <Navbar
         onSearch={handleSearch}
         onGenreSelect={handleGenreSelect}
@@ -84,8 +86,10 @@ const Home = () => {
       />
 
       <div className={`${showResults ? "blur-sm" : ""}`}>
+        {/* hero banner */}
         <NetflixHeroBanner movies={latestMovies} loading={latestLoading} />
 
+        {/* Movie Grid */}
         <div className="container-fluid px-4 mt-n5 position-relative">
           {!showResults && (
             <>

@@ -10,9 +10,9 @@ import {
 } from "react-bootstrap";
 import { useMultipleMoviesDetails } from "../../hooks/useMovie";
 import "./favourites.css";
-import {Link} from "react-router-dom"
-import SpinnerComponent from './../../components/UI/spinner';
-import ErrorComponent from './../../components/UI/errorComponent';
+import { Link } from "react-router-dom";
+import SpinnerComponent from "./../../components/UI/spinner";
+import ErrorComponent from "./../../components/UI/errorComponent";
 
 const FavoritesPage = () => {
   const [favoriteIds, setFavoriteIds] = useState(() =>
@@ -32,14 +32,12 @@ const FavoritesPage = () => {
   };
 
   return (
-    <Container fluid className="favorites-page p-4">
-      <h1 className="text-center mb-4 text-dark">My Favorites</h1>
+    <Container fluid className="favorites-page p-4 bg-var-primary ">
+      <h1 className="text-center mb-4 text-var-primary">My Favorites</h1>
 
-      {loading && (
-       <SpinnerComponent/>
-      )}
+      {loading && <SpinnerComponent />}
 
-      {error && <ErrorComponent message={error}/>}
+      {error && <ErrorComponent message={error} />}
 
       {favoriteIds.length === 0 && !loading && (
         <Alert variant="info" className="text-center">
@@ -47,7 +45,7 @@ const FavoritesPage = () => {
         </Alert>
       )}
 
-      <Row xs={1} md={2} lg={4} className="g-4 justify-content-center">
+      <Row xs={1} md={2} lg={4} className="g-4 justify-content-center ">
         {fetchedMovies.map((movie) => (
           <Link key={movie.id} to={`/movie/${movie.id}`}>
             <Col>
