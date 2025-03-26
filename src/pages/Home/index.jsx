@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useMemo } from "react"; // Added useMemo
 import { useMovies } from "../../hooks/useMovie";
 import NetflixHeroBanner from "../../components/UI/heroBanner";
 import MovieGrid from "./../../components/UI/movieGrid";
@@ -11,30 +11,62 @@ const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState(null);
-  const [selectedGenreName, setSelectedGenreName] = useState(null);
   const [showResults, setShowResults] = useState(false);
 
   // Use debounce hook for search term
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  // Fetch latest movies for hero banner
+  // Fetch movies and genres
   const { movies: latestMovies, loading: latestLoading } = useMovies("latest");
   const { genres } = useMovies();
 
+  // Memoize genre name selection to prevent unnecessary re-renders
+  const selectedGenreName = useMemo(() => {
+    return genres.find((genre) => genre.id === selectedGenre)?.name || "Selected";
+  }, [selectedGenre, genres]);
+
+  // Memoize the movie fetch parameters to optimize performance
+  const movieFetchParams = useMemo(() => {
+    if (selectedGenre) return { type: "genre", genreId: selectedGenre };
+    if (debouncedSearchTerm) return { type: "search", searchTerm: debouncedSearchTerm };
+    return { type: "popular" };
+  }, [selectedGenre, debouncedSearchTerm]);
+
   // Fetch movies based on genre or search
   const { movies: resultsMovies, loading: resultsLoading } = useMovies(
-    selectedGenre ? "genre" : debouncedSearchTerm ? "search" : "popular",
-    selectedGenre,
-    debouncedSearchTerm
+    movieFetchParams.type,
+    movieFetchParams.genreId,
+    movieFetchParams.searchTerm
   );
 
-  // Fetch popular movies for first grid
-  const { movies: popularMovies, loading: popularLoading } =
-    useMovies("popular");
+  // Fetch popular and trending movies
+  const { movies: popularMovies, loading: popularLoading } = useMovies("popular");
+  const { movies: trendingMovies, loading: trendingLoading } = useMovies("trending");
 
-  // Fetch trending movies for second grid
-  const { movies: trendingMovies, loading: trendingLoading } =
-    useMovies("trending");
+  // Memoize results title and loading state
+  const { resultsToShow, resultsTitle, isLoading } = useMemo(() => {
+    if (selectedGenre) {
+      return {
+        resultsToShow: resultsMovies,
+        resultsTitle: `${selectedGenreName} Movies`,
+        isLoading: resultsLoading
+      };
+    }
+    
+    if (debouncedSearchTerm) {
+      return {
+        resultsToShow: resultsMovies,
+        resultsTitle: `Results for "${debouncedSearchTerm}"`,
+        isLoading: resultsLoading
+      };
+    }
+    
+    return {
+      resultsToShow: popularMovies,
+      resultsTitle: "Popular Movies",
+      isLoading: popularLoading
+    };
+  }, [selectedGenre, debouncedSearchTerm, resultsMovies, popularMovies, selectedGenreName, resultsLoading, popularLoading]);
 
   // Handle search functionality
   const handleSearch = (term) => {
@@ -45,11 +77,7 @@ const Home = () => {
 
   // Handle genre selection
   const handleGenreSelect = (genreId) => {
-    console.log(genreId);
     setSelectedGenre(genreId);
-    const genreName =
-      genres.find((genre) => genre.id === genreId)?.name || "Selected";
-    setSelectedGenreName(genreName);
     setSearchTerm("");
     setShowResults(true);
   };
@@ -60,22 +88,9 @@ const Home = () => {
     setShowResults(false);
   };
 
-  // Determine results to show and title
-  const resultsToShow =
-    selectedGenre || debouncedSearchTerm ? resultsMovies : popularMovies;
-
-  const resultsTitle = selectedGenre
-    ? `${selectedGenreName} Movies`
-    : debouncedSearchTerm
-    ? `Results for "${debouncedSearchTerm}"`
-    : "Popular Movies";
-
-  const isLoading =
-    selectedGenre || debouncedSearchTerm ? resultsLoading : popularLoading;
-
   return (
     <div className="netflix-home min-vh-100 bg-var-primary text-white">
-      {/* navbar */}
+      {/* Navbar */}
       <Navbar
         onSearch={handleSearch}
         onGenreSelect={handleGenreSelect}
@@ -86,7 +101,7 @@ const Home = () => {
       />
 
       <div className={`${showResults ? "blur-sm" : ""}`}>
-        {/* hero banner */}
+        {/* Hero Banner */}
         <NetflixHeroBanner movies={latestMovies} loading={latestLoading} />
 
         {/* Movie Grid */}

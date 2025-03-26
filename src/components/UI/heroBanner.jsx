@@ -1,19 +1,17 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
-import SpinnerComponent from "./spinner";
 import "../../styles/heroBanner.css";
+import SpinnerComponent from './spinner';
+
 
 const NetflixHeroBanner = ({ movies, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayRef = useRef(null);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  // Filter only movies with backdrop images
-  const displayMovies = movies
-    .filter((movie) => movie.backdrop_path)
-    .slice(0, 5);
+  const displayMovies = movies.filter((movie) => movie.backdrop_path).slice(0, 5);
 
-  // Auto-rotate carousel
   useEffect(() => {
     if (displayMovies.length === 0) return;
 
@@ -33,7 +31,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
       if (autoPlayRef.current) {
         autoPlayRef.current();
       }
-    }, 7000); // Change slide every 7 seconds
+    }, 7000);
 
     return () => clearInterval(interval);
   }, []);
@@ -41,11 +39,9 @@ const NetflixHeroBanner = ({ movies, loading }) => {
   if (loading || displayMovies.length === 0) {
     return (
       <div className="vh-75 d-flex justify-content-center align-items-center">
-        {loading ? (
-          <SpinnerComponent />
-        ) : (
-          <p className="fs-4">No featured movies available</p>
-        )}
+        <Suspense fallback={<p>Loading...</p>}>
+          {loading ? <SpinnerComponent /> : <p className="fs-4">No featured movies available</p>}
+        </Suspense>
       </div>
     );
   }
@@ -55,20 +51,27 @@ const NetflixHeroBanner = ({ movies, loading }) => {
   return (
     <div className="netflix-hero position-relative mb-5">
       {/* Video/Image Background */}
-      <div
-        className="hero-background"
-        style={{ height: "75vh", overflow: "hidden" }}
-      >
+      <div className="hero-background" style={{ height: "75vh", overflow: "hidden" }}>
         <div
           className={`position-absolute w-100 h-100 bg-cover bg-center transition-opacity ${
             isTransitioning ? "opacity-0" : "opacity-100"
           }`}
           style={{
-            backgroundImage: `url(https://image.tmdb.org/t/p/original${currentMovie.backdrop_path})`,
+            backgroundImage: isImageLoaded
+              ? `url(https://image.tmdb.org/t/p/original${currentMovie.backdrop_path})`
+              : "none",
             backgroundSize: "cover",
             backgroundPosition: "center top",
           }}
         >
+          {/* Load the image in the background */}
+          <img
+            src={`https://image.tmdb.org/t/p/original${currentMovie.backdrop_path}`}
+            alt="Backdrop"
+            onLoad={() => setIsImageLoaded(true)}
+            style={{ display: "none" }}
+          />
+
           {/* Gradient Overlay */}
           <div
             className="position-absolute w-100 h-100"
@@ -92,13 +95,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
         <div className="container">
           <div className="row">
             <div className="col-md-8 col-lg-6 ps-4 ps-md-5 hero-content">
-              <h1
-                className="display-5 fw-bold mb-2 text-truncate-2-lines"
-                style={{
-                  textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
-                  maxWidth: "100%",
-                }}
-              >
+              <h1 className="display-5 fw-bold mb-2 text-truncate-2-lines">
                 {currentMovie.title}
               </h1>
 
@@ -117,23 +114,14 @@ const NetflixHeroBanner = ({ movies, loading }) => {
               </div>
 
               {/* Overview */}
-              <p
-                className="lead mb-4 text-truncate-3-lines"
-                style={{
-                  textShadow: "1px 1px 3px rgba(0,0,0,0.7)",
-                  maxWidth: "100%",
-                }}
-              >
+              <p className="lead mb-4 text-truncate-3-lines">
                 {currentMovie.overview?.substring(0, 180)}
                 {currentMovie.overview?.length > 180 ? "..." : ""}
               </p>
 
               {/* Action Buttons */}
               <div className="d-flex flex-wrap gap-2">
-                <Link
-                  to={`/movie/${currentMovie.id}`}
-                  className="btn btn-secondary btn-lg px-4"
-                >
+                <Link to={`/movie/${currentMovie.id}`} className="btn btn-secondary btn-lg px-4">
                   <i className="bi bi-info-circle me-2"></i>
                   More Info
                 </Link>
@@ -150,9 +138,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
             <button
               key={index}
               type="button"
-              className={`netflix-indicator mx-1 ${
-                index === activeIndex ? "active" : ""
-              }`}
+              className={`netflix-indicator mx-1 ${index === activeIndex ? "active" : ""}`}
               onClick={() => {
                 setIsTransitioning(true);
                 setTimeout(() => {
@@ -163,10 +149,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
               style={{
                 width: "12px",
                 height: "2px",
-                background:
-                  index === activeIndex
-                    ? "#e50914"
-                    : "rgba(255, 255, 255, 0.5)",
+                background: index === activeIndex ? "#e50914" : "rgba(255, 255, 255, 0.5)",
                 border: "none",
                 cursor: "pointer",
                 padding: 0,
@@ -174,15 +157,6 @@ const NetflixHeroBanner = ({ movies, loading }) => {
               }}
             ></button>
           ))}
-        </div>
-      </div>
-
-      {/* Age Rating */}
-      <div className="position-absolute bottom-0 start-0 ms-4 mb-5">
-        <div className="d-flex align-items-center">
-          <div className="bg-dark bg-opacity-75 p-2 rounded">
-            <i className="bi bi-badge-hd-fill text-danger"></i>
-          </div>
         </div>
       </div>
     </div>
