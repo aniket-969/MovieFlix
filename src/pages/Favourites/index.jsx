@@ -49,7 +49,7 @@ const FavoritesPage = () => {
         {fetchedMovies.map((movie) => (
           <Link key={movie.id} to={`/movie/${movie.id}`}>
             <Col>
-              <Card className="h-100 movie-card">
+              <Card className="h-100 fav-movie-card">
                 <Card.Img
                   variant="top"
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

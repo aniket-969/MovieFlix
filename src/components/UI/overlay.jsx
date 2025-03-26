@@ -7,14 +7,14 @@ const ResultsOverlay = ({ title, movies, loading, onClose }) => {
   console.log(title)
   return (
     <div 
-      className="position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-90 overflow-auto"
+      className="position-fixed top-0 start-0 w-100 h-100 bg-var-primary text-var-primary bg-opacity-90 overflow-auto"
       style={{ zIndex: 1050 }}
     >
       <div className="container py-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="mb-0 fs-3">{title}</h2>
           <button
-            className="btn btn-sm text-white"
+            className="btn btn-sm text-var-primary"
             onClick={onClose}
             aria-label="Close results"
             style={{ fontSize: "1.5rem" }}

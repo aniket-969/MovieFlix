@@ -1,10 +1,10 @@
 
-  .movie-card {
+  .fav-movie-card {
     transition: transform 0.3s ease;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
   
-  .movie-card:hover {
+  .fav-movie-card:hover {
     transform: scale(1.03);
   }
   
