@@ -45,33 +45,49 @@ const FavoritesPage = () => {
         </Alert>
       )}
 
-      <Row xs={1} md={2} lg={4} className="g-4 justify-content-center ">
+      <Row xs={1} md={2} lg={4} className="g-4 justify-content-center">
         {fetchedMovies.map((movie) => (
-          <Link key={movie.id} to={`/movie/${movie.id}`}>
-            <Col>
-              <Card className="h-100 fav-movie-card">
+          <Col key={movie.id}>
+            <Card className="h-100 fav-movie-card">
+              {/* Wrap only the image inside the Link */}
+              <Link to={`/movie/${movie.id}`}>
                 <Card.Img
                   variant="top"
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
                   className="card-img-top"
                 />
-                <Card.Body>
-                  <Card.Title>{movie.title}</Card.Title>
-                  <Card.Text className="text-muted">
-                    Rating: {movie.vote_average.toFixed(1)}
-                  </Card.Text>
-                  <Button
-                    variant="danger"
-                    className="w-100"
-                    onClick={() => removeFromFavorites(movie.id)}
-                  >
-                    Remove from Favorites
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>{" "}
-          </Link>
+              </Link>
+
+              <Card.Body>
+                {/* Wrap only the title inside the Link */}
+                <Link
+                  to={`/movie/${movie.id}`}
+                  className="text-decoration-none"
+                >
+                  <Card.Title className="text-var-primary">
+                    {movie.title}
+                  </Card.Title>
+                </Link>
+
+                <Card.Text className="text-muted">
+                  Rating: {movie.vote_average.toFixed(1)}
+                </Card.Text>
+
+                {/* Remove from Favorites button (outside the Link) */}
+                <Button
+                  variant="danger"
+                  className="w-100"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent Link navigation
+                    removeFromFavorites(movie.id);
+                  }}
+                >
+                  Remove from Favorites
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
         ))}
       </Row>
     </Container>
