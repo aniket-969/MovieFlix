@@ -35,6 +35,80 @@ movieflix/src -
 └── 📂 utils            --->   Utility functions and helper methods
 ```
 
+ ## ✍️ Coding Standards  
+
+  - **File Naming:** Intialcase for folders, PascalCase for files and components.  
+  - **Component Naming:** Functional components start with an uppercase letter.  
+  - **Styling:** Uses **Inline CSS, Bootstrap, and External Stylesheets**.  
+
+## 🔌 API Documentation  
+
+- **Base API URL:** `https://api.themoviedb.org/3/`  
+- **Endpoints Used:**  
+  - `GET /movie/popular` - Fetch popular movies  
+  - `GET /movie/:id` - Fetch movie details  
+  - `GET /search/movie?query={query}` - Search for movies  
+
+```js
+// Example API Call using Axios
+import axios from "axios";
+import { useState, useEffect } from "react";
+
+const API_KEY = "your_api_key";
+const BASE_URL = "https://api.themoviedb.org/3";
+
+export const fetchPopularMovies = () => {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const getMovies = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/movie/popular`, {
+          params: {
+            api_key: API_KEY,
+          },
+        });
+        setMovies(response.data.results);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
+
+    getMovies();
+  }, []);
+
+  return (
+    <div>
+      {movies.map((movie) => (
+        <p key={movie.id}>{movie.title}</p>
+      ))}
+    </div>
+  );
+};
+```
+
+ ## 🔥 Error Handling & Debugging  
+
+  - **React Error Boundaries** for component-level issues.  
+  - **API errors** handled with `try/catch`.   
+
+  ```jsx
+  //Example of error boundary
+  import React, { Component } from "react";
+  class ErrorBoundary extends Component {
+    state = { hasError: false };
+
+    static getDerivedStateFromError() {
+      return { hasError: true };
+    }
+
+    render() {
+      return this.state.hasError ? <h1>Something went wrong.</h1> : this.props.children;
+    }
+  }
+  ```
+
+
 ## 📦 Installation
 
 ### Prerequisites
