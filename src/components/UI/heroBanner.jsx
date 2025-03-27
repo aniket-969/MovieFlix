@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef, lazy, Suspense } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense, useCallback, memo } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/heroBanner.css";
 import SpinnerComponent from "./spinner";
 
-const NetflixHeroBanner = ({ movies, loading }) => {
+const NetflixHeroBanner = memo(({ movies, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayRef = useRef(null);
@@ -13,19 +13,18 @@ const NetflixHeroBanner = ({ movies, loading }) => {
     .filter((movie) => movie.backdrop_path)
     .slice(0, 5);
 
+  const handlePlay = useCallback(() => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setActiveIndex((current) => (current + 1) % displayMovies.length);
+      setTimeout(() => setIsTransitioning(false), 300);
+    }, 300);
+  }, [displayMovies.length]);
+
   useEffect(() => {
     if (displayMovies.length === 0) return;
-
-    const play = () => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setActiveIndex((current) => (current + 1) % displayMovies.length);
-        setTimeout(() => setIsTransitioning(false), 300);
-      }, 300);
-    };
-
-    autoPlayRef.current = play;
-  }, [displayMovies.length]);
+    autoPlayRef.current = handlePlay;
+  }, [handlePlay, displayMovies.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,6 +34,18 @@ const NetflixHeroBanner = ({ movies, loading }) => {
     }, 7000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  const handleIndicatorClick = useCallback((index) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setActiveIndex(index);
+      setTimeout(() => setIsTransitioning(false), 500);
+    }, 500);
+  }, []);
+
+  const handleImageLoad = useCallback(() => {
+    setIsImageLoaded(true);
   }, []);
 
   if (loading || displayMovies.length === 0) {
@@ -76,7 +87,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
           <img
             src={`https://image.tmdb.org/t/p/original${currentMovie.backdrop_path}`}
             alt="Backdrop"
-            onLoad={() => setIsImageLoaded(true)}
+            onLoad={handleImageLoad}
             style={{ display: "none" }}
           />
 
@@ -152,13 +163,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
               className={`netflix-indicator mx-1 ${
                 index === activeIndex ? "active" : ""
               }`}
-              onClick={() => {
-                setIsTransitioning(true);
-                setTimeout(() => {
-                  setActiveIndex(index);
-                  setTimeout(() => setIsTransitioning(false), 500);
-                }, 500);
-              }}
+              onClick={() => handleIndicatorClick(index)}
               style={{
                 width: "12px",
                 height: "2px",
@@ -177,6 +182,6 @@ const NetflixHeroBanner = ({ movies, loading }) => {
       </div>
     </div>
   );
-};
+});
 
 export default NetflixHeroBanner;

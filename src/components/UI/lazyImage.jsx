@@ -1,6 +1,4 @@
-
 import { useRef,useState ,useEffect} from 'react';
-
 
 const LazyImage = ({ movie, hoverIndex, index }) => {
   const [isLoaded, setIsLoaded] = useState(false);
