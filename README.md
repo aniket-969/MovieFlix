@@ -14,30 +14,25 @@ MovieFlix is a web application that allows users to browse and search for movies
 - **Styling:** Bootstrap ,CSS
 - **Build Tool:** Vite
 - **Deployment:** Vercel
+
 ## 📂 Project Structure
 
 The project follows a modular folder structure for better maintainability and scalability:
+movieflix/src -
 
-- **api/** → Defines API calls and requests and basic axios configuration 
-  - **queries/** → Defines specific API queries and endpoints  
-
-- **components/** → Contains reusable UI components  
-  - **UI/** → UI-related components like buttons, modals, etc.  
-
-- **context/** → React context providers for global state management  
-
-- **hooks/** → Custom React hook for managing movies api
-
-- **pages/** → Main application pages  
-  - **app/** → Core app-related pages with application router , app.jsx and provider.jsx
-  - **Favourites/** → Page for viewing and managing favorite movies  
-  - **Home/** → Homepage displaying movie listings  
-  - **MovieDetails/** → Page for displaying detailed movie information  
-
-- **styles/** → Global and component-specific stylesheets  
-
-- **utils/** → Utility functions and helper methods  
-
+├── 📂 api # Handles API calls, requests, and Axios configuration
+│ └── 📂 queries # Defines specific API queries and endpoints
+├── 📂 components # Contains reusable UI components
+│ └── 📂 UI # UI-related components like Spinner, MovieCard, etc.
+├── 📂 context # React Context providers for theme toggle
+├── 📂 hooks # Custom React hooks for managing movie-related API calls
+├── 📂 pages # Main application pages
+│ ├── 📂 app # Core app pages with application router, app.jsx, and provider.jsx
+│ ├── 📂 Favourites # Page for viewing and managing favorite movies
+│ ├── 📂 Home # Homepage displaying movie listings
+│ └── 📂 MovieDetails # Page for displaying detailed movie information
+├── 📂 styles # Global and component-specific stylesheets
+└── 📂 utils # Utility functions and helper methods
 
 ## 📦 Installation
 
