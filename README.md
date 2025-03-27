@@ -54,6 +54,7 @@ To start the development server, run:
 
 ```bash
 npm run dev
+```
 
 ## 📦 Production Build
 
@@ -61,6 +62,7 @@ To create a production build, run:
 
 ```bash
 npm run build
+```
 
 ## ⚙️ Environment Variables
 
@@ -71,6 +73,7 @@ Create a `.env` file in the root directory and include the following:
 VITE_TMDB_API_KEY=your_api_key
 
 Replace your_api_key with the actual tmdb api key which can be obtained from TMDB by login to their website
+```
 
 ## 📤 Deployment
 
