@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import ThemeToggleButton from "./../ThemeToggle";
 import "../../styles/navbar.css";
 
-const Navbar = ({
+const Navbar = memo(({
   onSearch,
   genres,
   onGenreSelect,
@@ -15,21 +15,22 @@ const Navbar = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const searchInputRef = useRef(null);
 
+  // Memoize scroll handler to prevent recreation
+  const handleScroll = useCallback(() => {
+    if (window.scrollY > 50) {
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(false);
+    }
+  }, []);
+
   // Handle navbar background change on scroll
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [handleScroll]);
 
   // Focus search input when search is toggled
   useEffect(() => {
@@ -38,36 +39,52 @@ const Navbar = ({
     }
   }, [showSearch]);
 
-  const handleSubmit = (e) => {
+  // Memoize submit handler
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       onSearch(searchTerm.trim());
       setShowSearch(true);
     }
-  };
+  }, [searchTerm, onSearch]);
 
-  const handleSearchToggle = () => {
-    setShowSearch(!showSearch);
+  // Memoize search toggle handler
+  const handleSearchToggle = useCallback(() => {
+    setShowSearch(prev => !prev);
     if (!showSearch) {
       // Prepare for focus via useEffect
       searchInputRef.current?.focus();
     } else {
       setSearchTerm("");
     }
-  };
+  }, [showSearch, setSearchTerm]);
 
-  const handleGenreClick = (genreId) => {
+  // Memoize genre click handler
+  const handleGenreClick = useCallback((genreId) => {
     // Call genre select handler
     onGenreSelect(genreId);
     setShowSearch(false);
     setSearchTerm("");
-  };
+  }, [onGenreSelect, setSearchTerm]);
 
-  // Group genres into categories for dropdown
-  const genreCategories = {
+  // Memoize genre categories to prevent unnecessary recalculation
+  const genreCategories = useMemo(() => ({
     "Popular Genres": genres.slice(0, 4),
     "Movie Genres": genres.slice(5, 8),
-  };
+  }), [genres]);
+
+  // Memoize search input change handler
+  const handleSearchInputChange = useCallback((e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    onSearch(value);
+  }, [setSearchTerm, onSearch]);
+
+  // Memoize close search handler
+  const handleCloseSearch = useCallback(() => {
+    setShowSearch(false);
+    setSearchTerm("");
+  }, [setSearchTerm]);
 
   return (
     <div
@@ -166,10 +183,7 @@ const Navbar = ({
                     className="form-control bg-dark text-white"
                     placeholder="Titles, people, genres"
                     value={searchTerm}
-                    onChange={(e) => {
-                      setSearchTerm(e.target.value);
-                      onSearch(e.target.value);
-                    }}
+                    onChange={handleSearchInputChange}
                     style={{ width: "240px" }}
                   />
                   <button
@@ -181,10 +195,7 @@ const Navbar = ({
                   <button
                     type="button"
                     className="btn btn-sm position-absolute end-0 top-0 bottom-0 text-white-50 me-5"
-                    onClick={() => {
-                      setShowSearch(false);
-                      setSearchTerm("");
-                    }}
+                    onClick={handleCloseSearch}
                   >
                     <i className="bi bi-x-lg"></i>
                   </button>
@@ -204,6 +215,6 @@ const Navbar = ({
       </nav>
     </div>
   );
-};
+});
 
 export default Navbar;

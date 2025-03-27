@@ -1,39 +1,60 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { 
+  useState, 
+  useRef, 
+  useEffect, 
+  useMemo, 
+  useCallback, 
+  memo 
+} from "react";
 import { Link } from "react-router-dom";
 import SpinnerComponent from "./spinner";
 import MovieCard from "../UI/movieCard"
 import "../../styles/movieGrid.css";
 
-const MovieCarousel = ({ title, movies, loading }) => {
+const MovieCarousel = memo(({ title, movies, loading }) => {
   const [hoverIndex, setHoverIndex] = useState(-1);
   const [scrollPosition, setScrollPosition] = useState(0);
   const carouselRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
 
-  // Calculate number of visible cards based on screen width
-  const getVisibleCardsCount = () => {
+  // Memoize visible cards count calculation
+  const visibleCardsCount = useMemo(() => {
     if (typeof window === 'undefined') return 5;
     const screenWidth = window.innerWidth;
     if (screenWidth <= 575) return 2;
     if (screenWidth <= 767) return 3;
     if (screenWidth <= 1199) return 4;
     return 5;
-  };
+  }, []);
 
-  // Update scroll and arrow visibility
+  // Memoize mouse enter handler
+  const handleMouseEnter = useCallback((index) => {
+    setHoverIndex(index);
+  }, []);
+
+  // Memoize mouse leave handler
+  const handleMouseLeave = useCallback(() => {
+    setHoverIndex(-1);
+  }, []);
+
+  // Memoize scroll update effect
   useEffect(() => {
-    if (carouselRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-      
-      // Update arrow visibility
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
-    }
+    const updateArrowVisibility = () => {
+      if (carouselRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+        
+        // Update arrow visibility
+        setShowLeftArrow(scrollLeft > 0);
+        setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
+      }
+    };
+
+    updateArrowVisibility();
   }, [scrollPosition]);
 
-  // Handle scroll
-  const handleScroll = (direction) => {
+  // Memoize scroll handler
+  const handleScroll = useCallback((direction) => {
     if (carouselRef.current) {
       const scrollAmount = carouselRef.current.clientWidth * 0.8;
       const newPosition =
@@ -48,15 +69,31 @@ const MovieCarousel = ({ title, movies, loading }) => {
 
       setScrollPosition(newPosition);
     }
-  };
+  }, [scrollPosition]);
 
-  // Update scroll position when carousel is scrolled directly
-  const handleScrollEvent = () => {
+  // Memoize scroll event handler
+  const handleScrollEvent = useCallback(() => {
     if (carouselRef.current) {
       setScrollPosition(carouselRef.current.scrollLeft);
     }
-  };
+  }, []);
 
+  // Memoize rendering of movie cards
+  const memoizedMovieCards = useMemo(() => 
+    movies.map((movie, index) => (
+      <MovieCard 
+        key={movie.id} 
+        movie={movie} 
+        index={index}
+        onMouseEnter={() => handleMouseEnter(index)}
+        onMouseLeave={handleMouseLeave}
+        isHovered={hoverIndex === index}
+      />
+    )), 
+    [movies, hoverIndex, handleMouseEnter, handleMouseLeave]
+  );
+
+  // Early return for loading and empty states
   if (loading) {
     return <SpinnerComponent />;
   }
@@ -96,17 +133,7 @@ const MovieCarousel = ({ title, movies, loading }) => {
           className="movie-carousel-container"
           onScroll={handleScrollEvent}
         >
-          {/* MovieCard */}
-          {movies.map((movie, index) => (
-            <MovieCard 
-              key={movie.id} 
-              movie={movie} 
-              index={index}
-              onMouseEnter={() => setHoverIndex(index)}
-              onMouseLeave={() => setHoverIndex(-1)}
-              isHovered={hoverIndex === index}
-            />
-          ))}
+          {memoizedMovieCards}
         </div>
 
         {/* Right scroll arrow */}
@@ -122,6 +149,6 @@ const MovieCarousel = ({ title, movies, loading }) => {
       </div>
     </div>
   );
-};
+});
 
 export default MovieCarousel;

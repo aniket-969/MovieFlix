@@ -1,13 +1,19 @@
-import { useState, lazy, Suspense, useMemo } from "react"; // Added useMemo
+import React, {
+  useState,
+  lazy,
+  Suspense,
+  useMemo,
+  useCallback,
+  memo,
+} from "react";
 import { useMovies } from "../../hooks/useMovie";
 import NetflixHeroBanner from "../../components/UI/heroBanner";
-// import MovieGrid from "./../../components/UI/movieGrid";
 import Navbar from "../../components/UI/navbar";
 import SpinnerComponent from "../../components/UI/spinner";
 import useDebounce from "../../hooks/useDebounce";
 
 const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
-const MovieGrid = lazy(() => import("./../../components/UI/movieGrid"));
+const MovieGrid = memo(lazy(() => import("./../../components/UI/movieGrid")));
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -82,25 +88,26 @@ const Home = () => {
     popularLoading,
   ]);
 
-  // Handle search functionality
-  const handleSearch = (term) => {
+  // Memoized search handler to prevent unnecessary re-renders
+  const handleSearch = useCallback((term) => {
     setSearchTerm(term);
     setSelectedGenre(null);
     setShowResults(!!term);
-  };
+  }, []);
 
-  // Handle genre selection
-  const handleGenreSelect = (genreId) => {
+  // Memoized genre selection handler
+  const handleGenreSelect = useCallback((genreId) => {
     setSelectedGenre(genreId);
     setSearchTerm("");
     setShowResults(true);
-  };
+  }, []);
 
-  const closeResults = () => {
+  // Memoized close results handler
+  const closeResults = useCallback(() => {
     setSearchTerm("");
     setSelectedGenre(null);
     setShowResults(false);
-  };
+  }, []);
 
   return (
     <div className="netflix-home min-vh-100 bg-var-primary text-white">
@@ -152,4 +159,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default memo(Home);
