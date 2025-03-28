@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useRef, lazy, Suspense, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  lazy,
+  Suspense,
+  useCallback,
+  useMemo,
+} from "react";
 import { Link } from "react-router-dom";
 import "../../styles/heroBanner.css";
 import SpinnerComponent from "./spinner";
@@ -6,14 +14,13 @@ import SpinnerComponent from "./spinner";
 const NetflixHeroBanner = ({ movies, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const autoPlayRef = useRef(null);
+  const intervalRef = useRef(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  const displayMovies = useMemo(() => 
-    movies.filter((movie) => movie.backdrop_path).slice(0, 5), 
+  const displayMovies = useMemo(
+    () => movies.filter((movie) => movie.backdrop_path).slice(0, 5),
     [movies]
   );
-  
 
   const handlePlay = useCallback(() => {
     setIsTransitioning(true);
@@ -25,29 +32,23 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
   useEffect(() => {
     if (displayMovies.length === 0) return;
-    autoPlayRef.current = handlePlay;
+    intervalRef.current = setInterval(handlePlay, 7000);
+    return () => clearInterval(intervalRef.current);
   }, [handlePlay, displayMovies.length]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (autoPlayRef.current) {
-        autoPlayRef.current();
-      }
-    }, 7000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleIndicatorClick = useCallback((index) => {
+  const handleIndicatorClick = (index) => {
+    if (index === activeIndex) return;
+    clearInterval(intervalRef.current);
     setIsTransitioning(true);
     setTimeout(() => {
       setActiveIndex(index);
-      setTimeout(() => setIsTransitioning(false), 500);
-    }, 500);
-  }, []);
+      setIsImageLoaded(false);
+      setTimeout(() => setIsTransitioning(false), 300);
+    }, 300);
+    intervalRef.current = setInterval(handlePlay, 7000);
+  };
 
   const handleImageLoad = () => setIsImageLoaded(true);
-
 
   if (loading || displayMovies.length === 0) {
     return (
@@ -67,11 +68,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
   return (
     <div className="netflix-hero position-relative mb-5">
-      {/* Video/Image Background */}
-      <div
-        className="hero-background"
-        style={{ height: "75vh", overflow: "hidden" }}
-      >
+      <div className="hero-background" style={{ height: "75vh", overflow: "hidden" }}>
         <div
           className={`position-absolute w-100 h-100 bg-cover bg-center transition-opacity ${
             isTransitioning ? "opacity-0" : "opacity-100"
@@ -84,28 +81,20 @@ const NetflixHeroBanner = ({ movies, loading }) => {
             backgroundPosition: "center top",
           }}
         >
-          {/* Load the image in the background */}
           <img
             src={`https://image.tmdb.org/t/p/original${currentMovie.backdrop_path}`}
             alt="Backdrop"
             onLoad={handleImageLoad}
             style={{ display: "none" }}
           />
-
-          {/* Gradient Overlay */}
-          <div
-            className="position-absolute w-100 h-100"
-            style={{
-              background: `
-                linear-gradient(0deg, #141414 0%, rgba(20, 20, 20, 0) 50%, rgba(20, 20, 20, 0.7) 100%),
-                linear-gradient(90deg, rgba(20, 20, 20, 0.8) 0%, rgba(20, 20, 20, 0) 60%)
-              `,
-            }}
-          ></div>
+          <div className="position-absolute w-100 h-100" style={{
+            background: `
+              linear-gradient(0deg, #141414 0%, rgba(20, 20, 20, 0) 50%, rgba(20, 20, 20, 0.7) 100%),
+              linear-gradient(90deg, rgba(20, 20, 20, 0.8) 0%, rgba(20, 20, 20, 0) 60%)
+            `,
+          }}></div>
         </div>
       </div>
-
-      {/* Content Area */}
       <div
         className={`hero-content position-absolute top-0 left-0 w-100 h-100 d-flex align-items-center transition-opacity ${
           isTransitioning ? "opacity-0" : "opacity-100"
@@ -118,8 +107,6 @@ const NetflixHeroBanner = ({ movies, loading }) => {
               <h1 className="display-5 fw-bold mb-2 text-truncate-2-lines">
                 {currentMovie.title}
               </h1>
-
-              {/* Movie Info */}
               <div className="d-flex align-items-center mb-3 text-light">
                 <span className="badge bg-danger me-2">
                   {currentMovie.adult ? "18+" : "PG"}
@@ -132,15 +119,11 @@ const NetflixHeroBanner = ({ movies, loading }) => {
                   {currentMovie.vote_average?.toFixed(1)}
                 </span>
               </div>
-
-              {/* Overview */}
               <p className="lead mb-4 text-truncate-3-lines">
                 {currentMovie.overview?.substring(0, 180)}
                 {currentMovie.overview?.length > 180 ? "..." : ""}
               </p>
-
-              {/* Action Buttons */}
-              <div className="d-flex flex-wrap gap-2">
+              <div className="d-flex flex-wrap gap-2" style={{ pointerEvents: "none" }}>
                 <Link
                   to={`/movie/${currentMovie.id}`}
                   className="btn btn-secondary btn-lg px-4"
@@ -153,8 +136,6 @@ const NetflixHeroBanner = ({ movies, loading }) => {
           </div>
         </div>
       </div>
-
-      {/* Carousel Indicators */}
       <div className="position-absolute bottom-0 end-0 me-4 mb-5">
         <div className="d-flex">
           {displayMovies.map((_, index) => (
@@ -166,12 +147,12 @@ const NetflixHeroBanner = ({ movies, loading }) => {
               }`}
               onClick={() => handleIndicatorClick(index)}
               style={{
+                position: "relative",
+                zIndex: 10,
+                pointerEvents: "auto",
                 width: "12px",
                 height: "2px",
-                background:
-                  index === activeIndex
-                    ? "#e50914"
-                    : "rgba(255, 255, 255, 0.5)",
+                background: index === activeIndex ? "#e50914" : "rgba(255, 255, 255, 0.5)",
                 border: "none",
                 cursor: "pointer",
                 padding: 0,
