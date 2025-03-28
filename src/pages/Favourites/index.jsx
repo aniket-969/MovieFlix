@@ -3,7 +3,7 @@ import { Container, Row, Alert } from "react-bootstrap";
 import { useMultipleMoviesDetails } from "../../hooks/useMovie";
 import SpinnerComponent from "../../components/UI/spinner";
 import ErrorComponent from "../../components/UI/errorComponent";
-import FavoriteMovieCard from "../../components/UI/favMovieCard";// Import memoized card
+import FavoriteMovieCard from "../../components/UI/favMovieCard"; // Import memoized card
 
 const FavoritesPage = () => {
   const [favoriteIds, setFavoriteIds] = useState(() =>
@@ -12,8 +12,11 @@ const FavoritesPage = () => {
 
   console.log("Favorite IDs in state:", favoriteIds); // Check state
 
-  const { movies: fetchedMovies, loading, error } =
-    useMultipleMoviesDetails(favoriteIds);
+  const {
+    movies: fetchedMovies,
+    loading,
+    error,
+  } = useMultipleMoviesDetails(favoriteIds);
 
   const removeFromFavorites = useCallback((movieId) => {
     console.log(`Removing movie ID: ${movieId}`); // Check if function is triggered
