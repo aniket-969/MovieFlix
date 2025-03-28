@@ -2,7 +2,6 @@ import React, {
   useState,
   useRef,
   useEffect,
-  memo,
   useCallback,
   useMemo,
 } from "react";
@@ -99,7 +98,6 @@ const Navbar = ({
     [setSearchTerm, onSearch]
   );
 
-  // Memoize close search handler
   const handleCloseSearch = () => {
     setShowSearch(false);
     setSearchTerm("");
