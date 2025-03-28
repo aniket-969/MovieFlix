@@ -68,7 +68,10 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
   return (
     <div className="netflix-hero position-relative mb-5">
-      <div className="hero-background" style={{ height: "75vh", overflow: "hidden" }}>
+      <div
+        className="hero-background"
+        style={{ height: "75vh", overflow: "hidden" }}
+      >
         <div
           className={`position-absolute w-100 h-100 bg-cover bg-center transition-opacity ${
             isTransitioning ? "opacity-0" : "opacity-100"
@@ -87,12 +90,15 @@ const NetflixHeroBanner = ({ movies, loading }) => {
             onLoad={handleImageLoad}
             style={{ display: "none" }}
           />
-          <div className="position-absolute w-100 h-100" style={{
-            background: `
+          <div
+            className="position-absolute w-100 h-100"
+            style={{
+              background: `
               linear-gradient(0deg, #141414 0%, rgba(20, 20, 20, 0) 50%, rgba(20, 20, 20, 0.7) 100%),
               linear-gradient(90deg, rgba(20, 20, 20, 0.8) 0%, rgba(20, 20, 20, 0) 60%)
             `,
-          }}></div>
+            }}
+          ></div>
         </div>
       </div>
       <div
@@ -123,7 +129,10 @@ const NetflixHeroBanner = ({ movies, loading }) => {
                 {currentMovie.overview?.substring(0, 180)}
                 {currentMovie.overview?.length > 180 ? "..." : ""}
               </p>
-              <div className="d-flex flex-wrap gap-2" style={{ pointerEvents: "none" }}>
+              <div
+                className="d-flex flex-wrap gap-2"
+                style={{ pointerEvents: "none" }}
+              >
                 <Link
                   to={`/movie/${currentMovie.id}`}
                   className="btn btn-secondary btn-lg px-4"
@@ -146,18 +155,6 @@ const NetflixHeroBanner = ({ movies, loading }) => {
                 index === activeIndex ? "active" : ""
               }`}
               onClick={() => handleIndicatorClick(index)}
-              style={{
-                position: "relative",
-                zIndex: 10,
-                pointerEvents: "auto",
-                width: "12px",
-                height: "2px",
-                background: index === activeIndex ? "#e50914" : "rgba(255, 255, 255, 0.5)",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                transition: "all 0.3s ease",
-              }}
             ></button>
           ))}
         </div>

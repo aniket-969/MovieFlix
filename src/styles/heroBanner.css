@@ -15,15 +15,23 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.d-flex.flex-wrap.gap-2 {
-  pointer-events: none;
-}
-
 .netflix-indicator {
   position: relative; /* Ensure it's above the overlay */
   z-index: 10; /* Higher than overlapping elements */
   pointer-events: auto; /* Ensure it's clickable */
+  width: 12px;
+  height: 3px;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.5); /* Default color */
 }
+
+.netflix-indicator.active {
+  background: #e50914; /* Active indicator color */
+}
+
 
 /* Responsive adjustments for hero banner */
 @media (max-width: 1200px) {
