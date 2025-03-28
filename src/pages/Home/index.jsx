@@ -13,7 +13,7 @@ import SpinnerComponent from "../../components/UI/spinner";
 import useDebounce from "../../hooks/useDebounce";
 
 const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
-const MovieGrid = memo(lazy(() => import("./../../components/UI/movieGrid")));
+const MovieCarousel = lazy(() => import("./../../components/UI/movieGrid"));
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,19 +34,10 @@ const Home = () => {
     );
   }, [selectedGenre, genres]);
 
-  // Memoize the movie fetch parameters to optimize performance
-  const movieFetchParams = useMemo(() => {
-    if (selectedGenre) return { type: "genre", genreId: selectedGenre };
-    if (debouncedSearchTerm)
-      return { type: "search", searchTerm: debouncedSearchTerm };
-    return { type: "popular" };
-  }, [selectedGenre, debouncedSearchTerm]);
-
-  // Fetch movies based on genre or search
   const { movies: resultsMovies, loading: resultsLoading } = useMovies(
-    movieFetchParams.type,
-    movieFetchParams.genreId,
-    movieFetchParams.searchTerm
+    selectedGenre ? "genre" : debouncedSearchTerm ? "search" : "popular",
+    selectedGenre,
+    debouncedSearchTerm
   );
 
   // Fetch popular and trending movies
@@ -90,8 +81,8 @@ const Home = () => {
 
   // Memoized search handler to prevent unnecessary re-renders
   const handleSearch = useCallback((term) => {
-    setSearchTerm(term);
     setSelectedGenre(null);
+    setSearchTerm(term);
     setShowResults(!!term);
   }, []);
 
@@ -129,13 +120,13 @@ const Home = () => {
         <div className="container-fluid px-4 mt-n5 position-relative">
           {!showResults && (
             <>
-              <MovieGrid
+              <MovieCarousel
                 title="Popular on Netflix"
                 movies={popularMovies}
                 loading={popularLoading}
               />
 
-              <MovieGrid
+              <MovieCarousel
                 title="Trending This Week"
                 movies={trendingMovies}
                 loading={trendingLoading}
@@ -159,4 +150,4 @@ const Home = () => {
   );
 };
 
-export default memo(Home);
+export default Home;

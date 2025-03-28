@@ -104,8 +104,8 @@ body {
 
 /* Custom button styles */
 .btn-danger {
-  background-color: #e50914;
-  border-color: #e50914;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .btn-danger:hover,
@@ -139,5 +139,5 @@ body {
 }
 
 .genre-pill.active {
-  background-color: #e50914;
+  background-color: var(--primary-color);
 }

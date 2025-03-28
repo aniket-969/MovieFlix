@@ -1,151 +1,149 @@
-
 .movie-details-container {
-    min-height: 100vh;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    background-color: var(--bg-color);
+  min-height: 100vh;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  background-color: var(--bg-color);
 }
 
 .movie-card {
-    border: none;
-    overflow: hidden;
-    border-radius: 12px;
+  border: none;
+  overflow: hidden;
+  border-radius: 12px;
 }
 
 .movie-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.movie-details-container .row.g-0 {
+  align-items: stretch;
 }
 
-/* Revised poster handling to show full image */
 .poster-container {
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--bg-color);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color);
+  min-height: 100%;
 }
 
 .poster-wrapper {
-    width: 100%;
-    height: auto;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-
 .movie-poster {
-    width: 100%;
-    height: auto;
-    display: block;
-    max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .no-poster {
-    height: 100%;
-    min-height: 400px;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #666;
+  height: 100%;
+  min-height: 400px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
 }
 
 .favorite-btn {
-    padding: 0.5rem 1.5rem;
-    font-weight: 600;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-    border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  border-radius: 50px;
 }
 
 .favorite-btn:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .movie-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: #555;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #555;
 }
 
 .movie-meta div {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .rating {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .genres {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .genres .badge {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-    border-radius: 50px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: 50px;
 }
 
 .overview {
-    line-height: 1.7;
+  line-height: 1.7;
 }
 
-.overview h4, .production h5 {
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: #343a40;
+.overview h4,
+.production h5 {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #343a40;
 }
 
 .loading-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 1rem;
 }
 
 /* Responsive Styles */
 @media (max-width: 991.98px) {
-    .movie-title {
-        font-size: 1.75rem;
-    }
+  .movie-title {
+    font-size: 1.75rem;
+  }
 }
 
 @media (max-width: 767.98px) {
-    .poster-container {
-        background-color: transparent;
-    }
-    
-    .details-container {
-        padding: 1rem;
-    }
+  .poster-container {
+    background-color: transparent;
+  }
+
+  .details-container {
+    padding: 1rem;
+  }
 }
 
 @media (max-width: 575.98px) {
-    .movie-title {
-        font-size: 1.5rem;
-    }
-    
-    .movie-meta {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .details-container {
-        padding: 0.75rem;
-    }
-}
+  .movie-title {
+    font-size: 1.5rem;
+  }
 
-  
+  .movie-meta {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .details-container {
+    padding: 0.75rem;
+  }
+}

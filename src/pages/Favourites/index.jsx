@@ -1,23 +1,16 @@
-import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Spinner,
-  Alert,
-  Button,
-} from "react-bootstrap";
+import React, { useState, useCallback } from "react";
+import { Container, Row, Alert } from "react-bootstrap";
 import { useMultipleMoviesDetails } from "../../hooks/useMovie";
-import "./favourites.css";
-import { Link } from "react-router-dom";
-import SpinnerComponent from "./../../components/UI/spinner";
-import ErrorComponent from "./../../components/UI/errorComponent";
+import SpinnerComponent from "../../components/UI/spinner";
+import ErrorComponent from "../../components/UI/errorComponent";
+import FavoriteMovieCard from "../../components/UI/favMovieCard"; // Import memoized card
 
 const FavoritesPage = () => {
   const [favoriteIds, setFavoriteIds] = useState(() =>
     JSON.parse(localStorage.getItem("favorites") || "[]")
   );
+
+  console.log("Favorite IDs in state:", favoriteIds); // Check state
 
   const {
     movies: fetchedMovies,
@@ -25,18 +18,23 @@ const FavoritesPage = () => {
     error,
   } = useMultipleMoviesDetails(favoriteIds);
 
-  const removeFromFavorites = (movieId) => {
-    const updatedFavorites = favoriteIds.filter((id) => id != movieId);
-    setFavoriteIds(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-  };
+  const removeFromFavorites = useCallback((movieId) => {
+    console.log(`Removing movie ID: ${movieId}`); // Check if function is triggered
+
+    setFavoriteIds((prevFavorites) => {
+      const updatedFavorites = prevFavorites.filter((id) => id != movieId);
+      console.log("Updated favorite IDs:", updatedFavorites); // Check if state is updated
+
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+      return updatedFavorites;
+    });
+  }, []);
 
   return (
-    <Container fluid className="favorites-page p-4 bg-var-primary ">
+    <Container fluid className="favorites-page p-4 bg-var-primary">
       <h1 className="text-center mb-4 text-var-primary">My Favorites</h1>
 
       {loading && <SpinnerComponent />}
-
       {error && <ErrorComponent message={error} />}
 
       {favoriteIds.length === 0 && !loading && (
@@ -47,47 +45,11 @@ const FavoritesPage = () => {
 
       <Row xs={1} md={2} lg={4} className="g-4 justify-content-center">
         {fetchedMovies.map((movie) => (
-          <Col key={movie.id}>
-            <Card className="h-100 fav-movie-card">
-              {/* Wrap only the image inside the Link */}
-              <Link to={`/movie/${movie.id}`}>
-                <Card.Img
-                  variant="top"
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  className="card-img-top"
-                />
-              </Link>
-
-              <Card.Body>
-                {/* Wrap only the title inside the Link */}
-                <Link
-                  to={`/movie/${movie.id}`}
-                  className="text-decoration-none"
-                >
-                  <Card.Title className="text-var-primary">
-                    {movie.title}
-                  </Card.Title>
-                </Link>
-
-                <Card.Text className="text-muted">
-                  Rating: {movie.vote_average.toFixed(1)}
-                </Card.Text>
-
-                {/* Remove from Favorites button (outside the Link) */}
-                <Button
-                  variant="danger"
-                  className="w-100"
-                  onClick={(e) => {
-                    e.preventDefault(); // Prevent Link navigation
-                    removeFromFavorites(movie.id);
-                  }}
-                >
-                  Remove from Favorites
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
+          <FavoriteMovieCard
+            key={movie.id}
+            movie={movie}
+            removeFromFavorites={removeFromFavorites}
+          />
         ))}
       </Row>
     </Container>
