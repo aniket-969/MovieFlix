@@ -50,9 +50,8 @@ const NetflixHeroBanner = ({ movies, loading }) => {
     },
     [activeIndex, handlePlay]
   );
-  
+
   const handleImageLoad = useCallback(() => setIsImageLoaded(true), []);
-  
 
   if (loading || displayMovies.length === 0) {
     return (
@@ -72,7 +71,6 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
   return (
     <div className="netflix-hero position-relative mb-5">
-
       <div
         className="hero-background"
         style={{ height: "75vh", overflow: "hidden" }}
@@ -135,10 +133,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
                 {currentMovie.overview?.substring(0, 180)}
                 {currentMovie.overview?.length > 180 ? "..." : ""}
               </p>
-              <div
-                className="d-flex flex-wrap gap-2"
-                
-              >
+              <div className="d-flex flex-wrap gap-2">
                 <Link
                   to={`/movie/${currentMovie.id}`}
                   className="btn btn-secondary btn-lg px-4"

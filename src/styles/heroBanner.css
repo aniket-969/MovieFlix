@@ -15,6 +15,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .netflix-indicator {
   position: relative; /* Ensure it's above the overlay */
   z-index: 10; /* Higher than overlapping elements */
