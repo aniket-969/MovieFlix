@@ -3,15 +3,17 @@ import { Link } from "react-router-dom";
 import "../../styles/heroBanner.css";
 import SpinnerComponent from "./spinner";
 
-const NetflixHeroBanner = memo(({ movies, loading }) => {
+const NetflixHeroBanner = ({ movies, loading }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayRef = useRef(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  const displayMovies = movies
-    .filter((movie) => movie.backdrop_path)
-    .slice(0, 5);
+  const displayMovies = useMemo(() => 
+    movies.filter((movie) => movie.backdrop_path).slice(0, 5), 
+    [movies]
+  );
+  
 
   const handlePlay = useCallback(() => {
     setIsTransitioning(true);
@@ -44,9 +46,8 @@ const NetflixHeroBanner = memo(({ movies, loading }) => {
     }, 500);
   }, []);
 
-  const handleImageLoad = useCallback(() => {
-    setIsImageLoaded(true);
-  }, []);
+  const handleImageLoad = () => setIsImageLoaded(true);
+
 
   if (loading || displayMovies.length === 0) {
     return (
@@ -182,6 +183,6 @@ const NetflixHeroBanner = memo(({ movies, loading }) => {
       </div>
     </div>
   );
-});
+};
 
 export default NetflixHeroBanner;

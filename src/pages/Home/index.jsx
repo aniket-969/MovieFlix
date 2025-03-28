@@ -13,7 +13,7 @@ import SpinnerComponent from "../../components/UI/spinner";
 import useDebounce from "../../hooks/useDebounce";
 
 const ResultsOverlay = lazy(() => import("../../components/UI/overlay"));
-const MovieGrid = memo(lazy(() => import("./../../components/UI/movieGrid")));
+const MovieCarousel = lazy(() => import("./../../components/UI/movieGrid"));
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,7 +33,6 @@ const Home = () => {
       genres.find((genre) => genre.id === selectedGenre)?.name || "Selected"
     );
   }, [selectedGenre, genres]);
-  
 
   const { movies: resultsMovies, loading: resultsLoading } = useMovies(
     selectedGenre ? "genre" : debouncedSearchTerm ? "search" : "popular",
@@ -121,13 +120,13 @@ const Home = () => {
         <div className="container-fluid px-4 mt-n5 position-relative">
           {!showResults && (
             <>
-              <MovieGrid
+              <MovieCarousel
                 title="Popular on Netflix"
                 movies={popularMovies}
                 loading={popularLoading}
               />
 
-              <MovieGrid
+              <MovieCarousel
                 title="Trending This Week"
                 movies={trendingMovies}
                 loading={trendingLoading}
@@ -151,4 +150,4 @@ const Home = () => {
   );
 };
 
-export default memo(Home);
+export default Home;
