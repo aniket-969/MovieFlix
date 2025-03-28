@@ -33,20 +33,12 @@ const Home = () => {
       genres.find((genre) => genre.id === selectedGenre)?.name || "Selected"
     );
   }, [selectedGenre, genres]);
+  
 
-  // Memoize the movie fetch parameters to optimize performance
-  const movieFetchParams = useMemo(() => {
-    if (selectedGenre) return { type: "genre", genreId: selectedGenre };
-    if (debouncedSearchTerm)
-      return { type: "search", searchTerm: debouncedSearchTerm };
-    return { type: "popular" };
-  }, [selectedGenre, debouncedSearchTerm]);
-
-  // Fetch movies based on genre or search
   const { movies: resultsMovies, loading: resultsLoading } = useMovies(
-    movieFetchParams.type,
-    movieFetchParams.genreId,
-    movieFetchParams.searchTerm
+    selectedGenre ? "genre" : debouncedSearchTerm ? "search" : "popular",
+    selectedGenre,
+    debouncedSearchTerm
   );
 
   // Fetch popular and trending movies
