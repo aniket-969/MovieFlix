@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, lazy, Suspense, useCallback, memo } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/heroBanner.css";
 import SpinnerComponent from "./spinner";

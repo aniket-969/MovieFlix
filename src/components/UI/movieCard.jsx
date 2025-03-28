@@ -53,33 +53,24 @@ const MovieCard = React.memo(
     }, [imageUrl]);
 
     // Memoize styles to prevent unnecessary rerenders
-    const cardImageStyle = useMemo(
-      () => ({
-        aspectRatio: "2/3",
-        objectFit: "cover",
-        transition: "transform 0.3s ease-in-out",
-        transform: isHovered ? "scale(1.05)" : "scale(1)",
-      }),
-      [isHovered]
-    );
+    const cardImageStyle = () => ({
+      aspectRatio: "2/3",
+      objectFit: "cover",
+      transition: "transform 0.3s ease-in-out",
+      transform: isHovered ? "scale(1.05)" : "scale(1)",
+    });
 
-    const hoverOverlayStyle = useMemo(
-      () => ({
-        background:
-          "linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
-        opacity: isHovered ? 1 : 0,
-        transition: "opacity 0.3s ease",
-      }),
-      [isHovered]
-    );
+    const hoverOverlayStyle = () => ({
+      background:
+        "linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
+      opacity: isHovered ? 1 : 0,
+      transition: "opacity 0.3s ease",
+    });
 
-    const permanentBadgeStyle = useMemo(
-      () => ({
-        opacity: isHovered ? 0 : 1,
-        transition: "opacity 0.3s ease",
-      }),
-      [isHovered]
-    );
+    const permanentBadgeStyle = () => ({
+      opacity: isHovered ? 0 : 1,
+      transition: "opacity 0.3s ease",
+    });
 
     // Memoize formatted movie details
     const formattedMovieDetails = useMemo(
