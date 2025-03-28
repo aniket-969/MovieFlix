@@ -1,9 +1,16 @@
-import React, { useState, useRef, useEffect, memo, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  memo,
+  useCallback,
+  useMemo,
+} from "react";
 import { Link } from "react-router-dom";
 import ThemeToggleButton from "./../ThemeToggle";
 import "../../styles/navbar.css";
 
-const Navbar = memo(({
+const Navbar = ({
   onSearch,
   genres,
   onGenreSelect,
@@ -40,58 +47,68 @@ const Navbar = memo(({
   }, [showSearch]);
 
   // Memoize submit handler
-  const handleSubmit = useCallback((e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      onSearch(searchTerm.trim());
-      setShowSearch(true);
-    }
-  }, [searchTerm, onSearch]);
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (searchTerm.trim()) {
+        onSearch(searchTerm.trim());
+        setShowSearch(true);
+      }
+    },
+    [searchTerm, onSearch]
+  );
 
   // Memoize search toggle handler
-  const handleSearchToggle = useCallback(() => {
-    setShowSearch(prev => !prev);
+  const handleSearchToggle = () => {
+    setShowSearch((prev) => !prev);
     if (!showSearch) {
       // Prepare for focus via useEffect
       searchInputRef.current?.focus();
     } else {
       setSearchTerm("");
     }
-  }, [showSearch, setSearchTerm]);
+  };
 
   // Memoize genre click handler
-  const handleGenreClick = useCallback((genreId) => {
-    // Call genre select handler
-    onGenreSelect(genreId);
-    setShowSearch(false);
-    setSearchTerm("");
-  }, [onGenreSelect, setSearchTerm]);
+  const handleGenreClick = useCallback(
+    (genreId) => {
+      // Call genre select handler
+      onGenreSelect(genreId);
+      setShowSearch(false);
+      setSearchTerm("");
+    },
+    [onGenreSelect, setSearchTerm]
+  );
 
   // Memoize genre categories to prevent unnecessary recalculation
-  const genreCategories = useMemo(() => ({
-    "Popular Genres": genres.slice(0, 4),
-    "Movie Genres": genres.slice(5, 8),
-  }), [genres]);
+  const genreCategories = useMemo(
+    () => ({
+      "Popular Genres": genres.slice(0, 4),
+      "Movie Genres": genres.slice(5, 8),
+    }),
+    [genres]
+  );
 
   // Memoize search input change handler
-  const handleSearchInputChange = useCallback((e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    onSearch(value);
-  }, [setSearchTerm, onSearch]);
+  const handleSearchInputChange = useCallback(
+    (e) => {
+      const value = e.target.value;
+      setSearchTerm(value);
+      onSearch(value);
+    },
+    [setSearchTerm, onSearch]
+  );
 
   // Memoize close search handler
-  const handleCloseSearch = useCallback(() => {
+  const handleCloseSearch = () => {
     setShowSearch(false);
     setSearchTerm("");
-  }, [setSearchTerm]);
+  };
 
   return (
     <div
       className={`fixed-top transition-all ${
-        isScrolled
-          ? "bg-black"
-          : "bg-gradient-to-b from-black to-transparent "
+        isScrolled ? "bg-black" : "bg-gradient-to-b from-black to-transparent "
       }`}
     >
       <nav className="navbar navbar-expand-lg navbar-dark">
@@ -215,6 +232,6 @@ const Navbar = memo(({
       </nav>
     </div>
   );
-});
+};
 
 export default Navbar;

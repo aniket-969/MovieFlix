@@ -90,8 +90,8 @@ const Home = () => {
 
   // Memoized search handler to prevent unnecessary re-renders
   const handleSearch = useCallback((term) => {
-    setSearchTerm(term);
     setSelectedGenre(null);
+    setSearchTerm(term);
     setShowResults(!!term);
   }, []);
 
