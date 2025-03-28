@@ -16,7 +16,7 @@ import "./MovieDetails.css";
 import SpinnerComponent from "./../../components/UI/spinner";
 import ErrorComponent from "./../../components/UI/errorComponent";
 
-const MovieDetails = memo(() => {
+const MovieDetails = () => {
   const { movieId } = useParams();
   const { movie, loading, error } = useMovieDetails(movieId);
   
@@ -207,6 +207,6 @@ const MovieDetails = memo(() => {
       </Row>
     </Container>
   );
-});
+};
 
 export default MovieDetails;
