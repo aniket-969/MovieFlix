@@ -36,19 +36,23 @@ const NetflixHeroBanner = ({ movies, loading }) => {
     return () => clearInterval(intervalRef.current);
   }, [handlePlay, displayMovies.length]);
 
-  const handleIndicatorClick = (index) => {
-    if (index === activeIndex) return;
-    clearInterval(intervalRef.current);
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setActiveIndex(index);
-      setIsImageLoaded(false);
-      setTimeout(() => setIsTransitioning(false), 300);
-    }, 300);
-    intervalRef.current = setInterval(handlePlay, 7000);
-  };
-
-  const handleImageLoad = () => setIsImageLoaded(true);
+  const handleIndicatorClick = useCallback(
+    (index) => {
+      if (index === activeIndex) return;
+      clearInterval(intervalRef.current);
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setActiveIndex(index);
+        setIsImageLoaded(false);
+        setTimeout(() => setIsTransitioning(false), 300);
+      }, 300);
+      intervalRef.current = setInterval(handlePlay, 7000);
+    },
+    [activeIndex, handlePlay]
+  );
+  
+  const handleImageLoad = useCallback(() => setIsImageLoaded(true), []);
+  
 
   if (loading || displayMovies.length === 0) {
     return (
@@ -68,6 +72,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
 
   return (
     <div className="netflix-hero position-relative mb-5">
+
       <div
         className="hero-background"
         style={{ height: "75vh", overflow: "hidden" }}
@@ -101,6 +106,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
           ></div>
         </div>
       </div>
+
       <div
         className={`hero-content position-absolute top-0 left-0 w-100 h-100 d-flex align-items-center transition-opacity ${
           isTransitioning ? "opacity-0" : "opacity-100"
@@ -131,7 +137,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
               </p>
               <div
                 className="d-flex flex-wrap gap-2"
-                style={{ pointerEvents: "none" }}
+                
               >
                 <Link
                   to={`/movie/${currentMovie.id}`}
@@ -145,6 +151,7 @@ const NetflixHeroBanner = ({ movies, loading }) => {
           </div>
         </div>
       </div>
+
       <div className="position-absolute bottom-0 end-0 me-4 mb-5">
         <div className="d-flex">
           {displayMovies.map((_, index) => (
